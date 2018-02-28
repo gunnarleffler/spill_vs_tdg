@@ -43,12 +43,9 @@ fi
 # Generate Spill and TDG relationship plots
 ###################################################
 
-cd $SCRIPT_DIR
-python3 Spill_v_TDG_daily_py36_v1.py
-
 ############################################################
 # Calculate Washington, Oregon and Combined 12h TDG Averages
 ############################################################
 
 cd $SCRIPT_DIR/12hr
-./get_avgs.py -l 5 config.yml -rj > ../../data/12hr.json
+./get_avgs.py -l 15000 config.yml -rj > ../../data/12hr.json
