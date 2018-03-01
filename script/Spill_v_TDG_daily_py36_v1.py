@@ -16,20 +16,27 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 import numpy as np
 
+#network paths
 outdir_V = outdir =  os.getcwd() + '/../data/'
 indir = os.getcwd() + "/../config/"
+
+#Dan's paths for testing
+outdir_V = outdir =  os.getcwd() 
+indir = r'F:\python_local\spill_vs_tdg\config\\'
+
 file_out_base = 'daily_spill_v_tdg_2'
 
-projects = ['BON_WRNO', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_DG', 'CHJ_WSBW']
+projects = ['BON_WRNO', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_DG', 'CHJ']
 #projects = ['BON', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_DG', 'CHJ']
-#projects = [ 'BON']
+#projects = [ 'BON_WRNO']
 
 
 now = datetime.now()
 #now = datetime(2017,6,15)
 then = now - timedelta(7)
 
-end = (now.year, now.month, now.day+1)
+end_dt = now + timedelta(1)
+end = (end_dt.year, end_dt.month, end_dt.day+1)
 start = (then.year, then.month, then.day)
 
 then36hr = now - timedelta(1)
@@ -245,7 +252,7 @@ for project in projects:
 #    if project == 'GCL_OT':
 #        df1 = df1[(df1['GCL_Elev_Forebay']<1266)]
 
-    fig, ax = plt.subplots(figsize=(9, 7))
+    fig, ax = plt.subplots(figsize=(6, 4))
     dt_string = '{d.month}/{d.day}'.format(d=then)  + '-' + '{d.month}/{d.day}'.format(d=now)
     ax.plot(df1.iloc[:,0], df1.iloc[:,1], label = dt_string, linestyle='None', marker='o', color = 'k', alpha =0.5, markersize=5)
     dt_string = '{d.month}/{d.day}'.format(d=then36hr)  + '-' + '{d.month}/{d.day}'.format(d=now)
@@ -258,6 +265,7 @@ for project in projects:
         x_lims = ax.get_xlim()
         y_lims = ax.get_ylim()
 
+
     #get 5-50-95th percentile smooth lines
     p = project
     if project == 'CHJ_WSBW':
@@ -265,24 +273,25 @@ for project in projects:
     hist_sm = pd.read_csv(indir + p + '_smoothed_P.csv')
     ax.fill_between(hist_sm['Unnamed: 0'], hist_sm['0.95'], hist_sm['0.05'], alpha = 0.33, label = '5-95th P')
     ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'b', label = '50th P')
-    if smooth_df.count().any()>0:
-        ax.set_xlim(x_lims)
-        ax.set_ylim(y_lims)
+#    if smooth_df.count().any()>0:
+#        if x_lims[0] > 0:
+#            x_lims = (0.0, x_lims[1])
+#        if y_lims[0] > 100.0:
+#            y_lims = (100.0, y_lims[1])
+#        ax.set_xlim(x_lims)
+#        ax.set_ylim(y_lims)
     # Shrink current axis by 20%
     box = ax.get_position()
     ax.set_position([box.x0, box.y0, box.width * 0.9, box.height])
 
-    #for c in cols:
-    #    lowess = sm.nonparametric.lowess(p_df.loc[:,c].tolist(), p_df.index.values, frac=0.1)
-    #    smooth_df[c] = lowess[:, 1]
-    #    sc = smooth_df.iloc[(smooth_df[c]-120.0).abs().argsort()[:1]].index[0]
-    #    plt.plot(lowess[:, 0], lowess[:, 1], label = str(c) + ' P, 120% SC = ' + str(sc))
-    #plt.axhline(y=120, color='r', linestyle='-')
-    #smooth_df.to_csv(outdir + project + '_smoothed_P.csv')
-    #df1.iloc[:,0], df1.iloc[:,1]
-
-    spill_table = '7day regression\nTDG    Spill(kcfs)\n'
-    if smooth_df.count().any()>0:
+    spill_table = 'Most recent:\n{d.month}/{d.day}/{d.year} {d.hour:02}{d.minute:02}\n'.format(d=df1.index.max())
+    if smooth_df.count().any()==0:
+        spill_table = 'no spill or\nno data:\n' + '{d.month}/{d.day}'.format(d=then)  + '-' + '{d.month}/{d.day}'.format(d=now)
+    elif np.all(np.isnan(lowess[:,1])):
+        spill_table = '7day regression\nfailed'
+    else: 
+#        smooth_df.count().any()>0:
+        spill_table += '\n7day regress.\nTDG    Spill\n(sat)   (kcfs)\n'
         for tdg_level in TDG_goals:
             aaa = smooth_df.iloc[(smooth_df[1]-tdg_level).abs().argsort()[:1]]
             spill = aaa.iloc[0,0]
@@ -294,33 +303,7 @@ for project in projects:
                 spill_txt = '%0.0f'%spill
             print(tdg_level, spill_txt)
             spill_table += str(tdg_level) + '%   ' + spill_txt + '\n'
-    else:
-        spill_table = 'no spill or\nno data:\n' + '{d.month}/{d.day}'.format(d=then)  + '-' + '{d.month}/{d.day}'.format(d=now)
     plt.text(1.02,0.5, spill_table, transform = ax.transAxes, verticalalignment='center')
-
-    #lines = project + ' TDG production based on total spill and downstream tailwater TDG\n'
-    #lines += 'TDG table in kcfs\n'
-    #lines += 'TDG'
-    #for c in cols:
-    #    lines += ',' + str(c) + ' P'
-    #lines += '\n'
-    #for tdg_level in TDG_goals:
-    #    lines += str(tdg_level)+'%'
-    #    for c in cols:
-    #        #find the row that has the closest TDG value to the TDG target
-    #        spill_level = smooth_df.iloc[(smooth_df[c]-tdg_level).abs().argsort()[:1]].index[0]
-    #        #get the spill for that row / 'date'
-    ##        spill_level = aaa.loc[aaa.index[0], c]
-    #        lines += ',' + str(spill_level)
-    #    lines += '\n'
-    #
-    #fileOut = outdir + project + '_gas_production_spill_percentiles.csv'
-    #f = open(fileOut, 'w')
-    #f.write(lines)
-    #f.close()
-
-
-
 
     title1 = project
 
@@ -331,9 +314,11 @@ for project in projects:
     #        title1 += '(assumed > '+ str(bulk_uni_threshold) + 'kcfs spill)'
     plt.xlabel(df1.keys()[0] + ' (kcfs)')
     plt.ylabel(df1.keys()[1])
-    plt.legend(bbox_to_anchor=(0.5, 1.1), ncol = 5, loc = 'upper center')
-    title1 += ' {d.month}/{d.day}/{d.year} {d.hour:02}{d.minute:02}'.format(d=df36hr.index.max())
-    plt.title(title1, y=1.08)
+    plt.legend(bbox_to_anchor=(0.5, 1.2), ncol = 3, loc = 'upper center')
+#    if not df1.count().any():
+    title1 += ' {d.month}/{d.day}/{d.year} {d.hour:02}{d.minute:02}'.format(d=now)
+    plt.title(title1, y=1.2)
     filname = outdir + project + '_'  + file_out_base + '.png'
+    plt.gcf().subplots_adjust(top=0.8,right=0.8)
     plt.savefig(filname, dpi = 200)
     #os.startfile(filname)
