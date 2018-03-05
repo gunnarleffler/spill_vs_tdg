@@ -68,3 +68,7 @@ WRNO:
 CWMW:
   path: GOES-COMPUTED-REV
   methods:  ['or', 'wa', 'combined']
+PAQW:
+  path: GOES-COMPUTED-REV
+  methods:  ['or', 'wa', 'combined']
+
