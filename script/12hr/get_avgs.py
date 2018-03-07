@@ -151,9 +151,13 @@ def combine(orgn:pd.core.series.Series, wa:pd.core.series.Series, start_date: tu
     Returns:
         combined: The return value. the 12 hour average of TDG data as described below
         
-    Washington Method:
+    Combined Method:
         The Combined method takes the higher TDG average between the Oregon and 
-        Washington methods and stores it as a daily time series.  
+        Washington methods and stores it as a daily time series.  If a value's
+        quality is rated questionable and the other is not, the non-questionable 
+        data is chosen regardless of which value is higher.
+        
+        
 
     """
     
