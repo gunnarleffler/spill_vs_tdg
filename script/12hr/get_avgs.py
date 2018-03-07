@@ -30,6 +30,7 @@ from cwms_read import get_cwms, reindex
 from datetime import timedelta, datetime
 import numpy as np
 import math
+
 def loadConfig(path: str, verbose = True)->dict:
   if verbose:
     sys.stderr.write("loading config file...")
@@ -43,7 +44,7 @@ def set_time_index(ts_index, hour_int = 0, minute_int = 0, second_int = 0):
 
     
                 
-def oregon_method(series:pd.core.series.Series) -> pd.core.series.Series:
+def oregon_method(series:pd.core.series.Series) -> pd.core.frame.DataFrame:
     """
     Args:
         df: a pd.core.DataFrame of percent TDG saturation
@@ -86,7 +87,7 @@ def oregon_method(series:pd.core.series.Series) -> pd.core.series.Series:
 
 
 
-def washington_method(series:pd.core.series.Series) -> pd.core.series.Series:
+def washington_method(series:pd.core.series.Series) -> pd.core.frame.DataFrame:
     """
     Args:
         df: a pd.core.DataFrame of percent TDG saturation
@@ -138,7 +139,7 @@ def washington_method(series:pd.core.series.Series) -> pd.core.series.Series:
     return result 
     
 
-def combine(orgn:pd.core.series.Series, wa:pd.core.series.Series, start_date: tuple, end_date: tuple) -> pd.core.series.Series:
+def combine(orgn:pd.core.series.Series, wa:pd.core.series.Series, start_date: tuple, end_date: tuple) -> pd.core.frame.DataFrame:
     """
 
     Args:
