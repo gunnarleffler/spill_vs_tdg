@@ -26,8 +26,10 @@ import argparse
 import json
 import yaml
 import pandas as pd
-from cwms_read import get_cwms
-from datetime import timedelta
+from cwms_read import get_cwms, reindex
+from datetime import timedelta, datetime
+import numpy as np
+import math
 
 def loadConfig(path: str, verbose = True)->dict:
   if verbose:
@@ -40,7 +42,9 @@ def loadConfig(path: str, verbose = True)->dict:
 def set_time_index(ts_index, hour_int = 0, minute_int = 0, second_int = 0):
     return [x.replace(hour = hour_int, minute = minute_int, second = second_int) for x in ts_index]
 
-def oregon_method(df:pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
+    
+                
+def oregon_method(series:pd.core.series.Series) -> pd.core.frame.DataFrame:
     """
     Args:
         df: a pd.core.DataFrame of percent TDG saturation
@@ -52,20 +56,38 @@ def oregon_method(df:pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
         The Oregon method computes an average using the highest 12 hours TDG 
         readings of the day, then stores it as a daily time series.  The 12 hours
         do not need to be consecutive.
+        
+        12 hour values that have 8 or more hours of missing hourly data are 
+        flagged as questionable
     """
     
-    orgn = df \
+    orgn = series \
         .groupby(pd.Grouper(level='date', freq='D')) \
         .aggregate(lambda x: x.sort_values(ascending = False) \
-        .reset_index(drop = True).iloc[:12].mean())
+        .reset_index(drop = True).iloc[:12].mean()) \
+        .round(decimals = 2)
+    #orgn.fillna(0,inplace = True)    
+    
+    
+    high_quality = series \
+                            .groupby(pd.Grouper(level='date', freq='D')) \
+                            .aggregate(lambda x: pd.Series(x).isnull().sum())<7
+    
+    
     #set time to 1200 PST in GMT
-    orgn.index = set_time_index(orgn.index, hour_int = 20)
-    orgn.index.name = 'date'
-    return orgn
+    for s in [orgn, high_quality]:
+        s.index = set_time_index(s.index, hour_int = 20)
+        s.index.name = 'date'
+    
+    result = pd.DataFrame(index = orgn.index)
+    result['oregon'] = orgn
+    result['orgn_quality'] = high_quality
+    result.dropna(inplace = True)
+    return result
 
 
 
-def washington_method(df:pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
+def washington_method(series:pd.core.series.Series) -> pd.core.frame.DataFrame:
     """
     Args:
         df: a pd.core.DataFrame of percent TDG saturation
@@ -84,22 +106,40 @@ def washington_method(df:pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
           until there are 24 averages for the day.
         - From the 24 hour averages, the highest average is reported for the
           calendar day.
-        - Round 12 hour average to nearest whole number. 
+        - Round 12 hour average to nearest whole number.
+    
+    12 hour values that have 8 or more hours of missing hourly data are flagged 
+    as questionable
+    
 
     """
     #subtracting 1 minute from the index so the 01:00 value is the first value of the day
-    index = [pd.Timestamp(x) - timedelta(minutes=1)  for x in df.index.values]
-    df.index = index
-    df.index.name = 'date'
-    roll = df.rolling(window = 12, min_periods = 1, axis = 0).mean()
+    index = [pd.Timestamp(x) - timedelta(minutes=1)  for x in series.index.values]
+    series.index = index
+    series.index.name = 'date'
+    roll = series.rolling(window = 12, min_periods = 1, axis = 0)      
+    roll_mean = roll.mean()
+    wa_daily_max = roll_mean. \
+                            loc[roll_mean.groupby(pd.Grouper(level='date', freq='D')).idxmax()] \
+                            .dropna() \
+                            .round(decimals = 2)
+    high_quality = roll.count() > 8
+    high_quality = high_quality.loc[wa_daily_max.index]
     
-    wa_daily_max = roll.groupby(pd.Grouper(level='date', freq='D')).max()
     #set time to 1200 PST in GMT
-    wa_daily_max.index = set_time_index(wa_daily_max.index, hour_int = 20)
-    wa_daily_max.index.name = 'date'
-    return wa_daily_max
+    for s in [wa_daily_max, high_quality]:
+        s.index = set_time_index(s.index, hour_int = 20)
+        s.index.name = 'date'
 
-def combine(orgn:pd.core.frame.DataFrame, wa:pd.core.frame.DataFrame) -> pd.core.frame.DataFrame:
+    result = pd.DataFrame(index = wa_daily_max.index)
+    result['washington'] = wa_daily_max
+    result['wa_quality'] = high_quality
+    result.index.name = 'date'
+    result.dropna(inplace = True)
+    return result 
+    
+
+def combine(orgn:pd.core.series.Series, wa:pd.core.series.Series, start_date: tuple, end_date: tuple) -> pd.core.frame.DataFrame:
     """
 
     Args:
@@ -117,10 +157,57 @@ def combine(orgn:pd.core.frame.DataFrame, wa:pd.core.frame.DataFrame) -> pd.core
 
     """
     
+    wa = wa.pipe(reindex, start_date, end_date, 'D')
     
-    return pd.concat([wa, orgn]).groupby(level=0).max()
+    orgn = orgn.pipe(reindex, start_date, end_date, 'D')
+    
+    
+    combined = pd.DataFrame(index = wa.index)
+  
+    combined = orgn.join(wa)
+    
+    
+    
+    
+    def get_value(or_value, or_quality, wa_value, wa_quality):
+    
+        if not or_quality and not wa_quality and not or_value and not wa_value:
+            return np.nan
+        if math.isnan(or_value) and math.isnan(wa_value):
+            return np.nan
+        if  or_quality and not wa_quality:
+            return or_value
+        elif wa_quality and not or_quality:
+            return wa_value
+        elif or_value > wa_value:
+            return or_value
+        else:
+            return wa_value
+    
+    
+    def get_quality(or_value, or_quality, wa_value, wa_quality):
+    
+        if not or_quality and not wa_quality and not or_value and not wa_value:
+            return False
+        if  or_quality and not wa_quality:
+            return or_quality
+        elif wa_quality and not or_quality:
+            return wa_quality
+        elif or_value > wa_value:
+            return or_quality
+        else:
+            return wa_quality
+    
+    value = combined.apply(lambda x: get_value(x['oregon'], x['orgn_quality'], x['washington'], x['wa_quality']), axis = 1)
+    quality = combined.apply(lambda x: get_quality(x['oregon'], x['orgn_quality'], x['washington'], x['wa_quality']), axis = 1)
+    result = pd.DataFrame(index = combined.index)
+    result['value'] = value
+    result['quality'] = quality
+    result.dropna(inplace = True)
+    return result
 
-def pd_series_to_instapost(timeseries:pd.core.series.Series, pathname:str, units:str, timezone:str)->dict:
+
+def pd_df_to_instapost(value_df:pd.core.frame.DataFrame, pathname:str, units:str)->dict:
     """
     Args:
         series: a pd.core.Series time series with a time stamp index 
@@ -135,14 +222,34 @@ def pd_series_to_instapost(timeseries:pd.core.series.Series, pathname:str, units
         result: Dictionary in instapost format
     """
     result = {}
-    timeseries = {str(ts):float(val) for ts,val in zip(timeseries.index, timeseries.values)}
+    
+    
+    timeseries_dict = {}
+    
+    for timestamp, value, quality in zip(value_df.index, value_df.iloc[:,0], value_df.iloc[:,1]):
+        if math.isnan(value):
+            continue
+        loop_dict = {str(timestamp):
+                            {'value':float(value)}
+                    }
+        if not quality:
+            loop_dict[str(timestamp)].update({'quality':'QUESTIONABLE'})
+        timeseries_dict.update(loop_dict)    
+        
     result.update(
                         {pathname:{
-                                    'timezone': timezone,
+                                    
                                     'units': units,
-                                    'timeseries':timeseries}
+                                    'timezone':'GMT',
+                                    'timeseries':timeseries_dict
+                                    
+                                    }
                                 })
     return result
+
+
+
+
 
 
  #--------------------------------------------------------------------------------
@@ -162,25 +269,27 @@ if __name__ == "__main__":
     rawJSON = args.rawJSON
     config = args.config
     
+    
+    
     if args.lookback:
-        lookback = int(args.lookback)
+        lookback = int(args.lookback) 
     else:
         lookback = 1
+    now = datetime.now()
+    
+    #because the wa method is a rolling avg I want to lookback further than the
+    #given lookback so I have enough data to calculate the desired date plus an overlap
+    start = now - timedelta(days = lookback + 3)
+    start_date = (start.year, start.month, start.day)
+    index_start = now - timedelta(days = lookback + 1)
+    index_start = '-'.join([str(index_start.year), str("%02d" % (index_start.month,)), str("%02d" % (index_start.day,))])
+    end_date = (now.year, now.month, now.day)
+    
+    
     
     config_dict = loadConfig(config, verbose = verbose)
     
-    #get lists of projects to do for each method
-    oregon = []
-    washington = []
-    combined = []
-    for key, values in config_dict.items():
-        if 'or' in values['methods']:
-            oregon.append(key)
-        if 'wa' in values['methods']:
-            washington.append(key)
-        if 'combined' in values['methods']:
-            combined.append(key)
-            
+    
     #create the base pathname for each project.  The pathnames are not consistent
     #in the last section of the pathname.  This will also be done to both the 
     # raw and revised data so 2 separate pathname lists are made for each
@@ -191,35 +300,30 @@ if __name__ == "__main__":
         path_end = value['path']
         paths.append('{}{}{}'.format(key, path, path_end))
     
-    df = get_cwms(paths, lookback = lookback, fill = False, public = True, timezone = 'PST')
+    df = get_cwms(paths, lookback = lookback + 3, fill = True, public = True, timezone = 'PST')
     meta = df.__dict__['metadata']
-    data_dict = {'Washington': [x+'_%_Saturation_TDG' for x in washington],
-                 'Oregon': [x+'_%_Saturation_TDG' for x in oregon],
-                 'Combined': [x+'_%_Saturation_TDG' for x in combined]}
-    for key, value in data_dict.items():
-        missing_data = [x for x in value if x not in df.columns]
-        data_dict[key] = [x for x in value if x in df.columns]
-        if verbose:
-            sys.stderr.write('{}{}\n'.format(key, ' data missing for'))
-            for site in missing_data:sys.stderr.write(site.split('_')[0] + '\n')
-    
-    
-    wa_daily_max = df[data_dict['Washington']].pipe(washington_method)
-    or_daily_max = df[data_dict['Oregon']].pipe(oregon_method)
-    combined_wa = wa_daily_max[data_dict['Combined']]
-    combined_or = or_daily_max[data_dict['Combined']]
-    combined_daily_max = combine(wa_daily_max,or_daily_max)
-    new_pathname = '.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-'
-    
-    for data in [(combined_daily_max,new_pathname +'Combined-'), (wa_daily_max,new_pathname +'WAmethod-'),(or_daily_max,new_pathname +'ORmethod-')]:
-        dataframe, path_name = data
-        instapost = dataframe.apply(lambda x: pd_series_to_instapost(
-                                                x.dropna(), 
-                                                x.name.split('_')[0]+path_name +  meta[x.name]['path'].split('-')[-1], 
-                                                meta[x.name]['units'], 
-                                                'GMT'), axis = 0)
+
+
+    for column in df.columns:
+        series = df[column].copy()
+        units = meta[series.name]['units']
+        new_pathname = '.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-'
+        name = series.name.split('_')[0] 
+        end_name = meta[series.name]['path'].split('-')[-1]
+        oregon_pathname = '{}{}{}{}'.format(name, new_pathname, 'ORmethod-', end_name)
+        washington_pathname = '{}{}{}{}'.format(name, new_pathname, 'WAmethod-', end_name)
+        combined_pathname = '{}{}{}{}'.format(name, new_pathname, 'Combined-', end_name)
+        orgn = series.pipe(oregon_method)
+        wa = series.pipe(washington_method)
+        combined = combine(orgn, wa, start_date = start_date, end_date = end_date)
+        for data in [(combined, combined_pathname), (orgn, oregon_pathname), (wa, washington_pathname)]:
+            dataframe,pathname = data
+            dataframe = dataframe[index_start:]
+            instapost = pd_df_to_instapost(dataframe, pathname, units)
+
+            if rawJSON:print(json.dumps(instapost)+"\n---")
+            else:print(yaml.dump(instapost))
         
-        if rawJSON:instapost.apply(lambda x: print(json.dumps(x)+"\n---"))
-        else: instapost.apply(lambda x: print(yaml.dump(x)))
+        
         
 
