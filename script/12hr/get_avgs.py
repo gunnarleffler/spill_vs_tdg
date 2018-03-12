@@ -164,9 +164,6 @@ def combine(orgn:pd.core.series.Series, wa:pd.core.series.Series, start_date: tu
     wa = wa.pipe(reindex, start_date, end_date, 'D')
     
     orgn = orgn.pipe(reindex, start_date, end_date, 'D')
-    
-    
-    combined = pd.DataFrame(index = wa.index)
   
     combined = orgn.join(wa)
     
@@ -252,10 +249,6 @@ def pd_df_to_instapost(value_df:pd.core.frame.DataFrame, pathname:str, units:str
     return result
 
 
-
-
-
-
  #--------------------------------------------------------------------------------
 # main()
 #--------------------------------------------------------------------------------
@@ -327,7 +320,3 @@ if __name__ == "__main__":
 
             if rawJSON:print(json.dumps(instapost)+"\n---")
             else:print(yaml.dump(instapost))
-        
-        
-        
-
