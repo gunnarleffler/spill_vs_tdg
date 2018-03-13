@@ -51,4 +51,5 @@ python3 Spill_v_TDG_daily_py36_v1.py
 ############################################################
 
 cd $SCRIPT_DIR/12hr
-./get_avgs.py -l 5 config.yml -rj > ../../data/12hr.json
+python3 ./get_avgs.py -l 5 config.yml -rj > ../../data/12hr.json
+
