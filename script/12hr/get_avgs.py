@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+﻿#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 helpstr = '''
 get_avgs v1.0.0
@@ -26,7 +26,7 @@ import argparse
 import json
 import yaml
 import pandas as pd
-from cwms_read import get_cwms, reindex
+from cwms_read.cwms_read import get_cwms, reindex
 from datetime import timedelta, datetime
 import numpy as np
 import math
