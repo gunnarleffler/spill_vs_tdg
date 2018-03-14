@@ -4,13 +4,56 @@ import requests
 import json
 import pandas as pd
 from datetime import datetime, timedelta
+import sys
+from numpy import median
 
-def reindex(df, start_date, end_date):
-        date = pd.date_range(start = datetime(*start_date), end = datetime(*end_date), freq = "H")
+def reindex(df, start_date, end_date, freq):
+        date = pd.date_range(start = datetime(*start_date), end = datetime(*end_date), freq = freq)
+        date = [pd.Timestamp(x) for x in date]
+        if 'D' in freq:
+            index = df.index.copy()
+            index_hours = [x.hour for x in index]
+            m = median(index_hours)
+            def find_remainder(x):
+                return x%m
+            if sum([x%m for x in index_hours])>0:
+                return False
+            else:
+                date = [x.replace(hour = int(m)) for x in date] 
         df = df.reindex(date)
         df.index.rename('date', inplace = True)
         return df
 
+def get_frequency(index: pd.core.indexes.datetimes.DatetimeIndex)->str:
+    """
+    Args:
+        
+        index: a pd.core.indexes.datetimes.DatetimeIndex from a timeseries
+        
+    Returns:
+        
+        freq: a string value of either a daily, hourly, minutely, or secondly 
+              Offset Alias with the appropriate multiple.
+              This is not very robust, and returns False if it is not able to 
+              easily determine the frequency
+    """
+    seconds = index.to_series().diff().median().total_seconds()
+    minutes = seconds/60
+    hours = minutes/60
+    days = hours/24
+    if days>=1 and days%int(days) == 0:
+        freq = str(int(days))+'D'
+    elif hours>=1 and hours%int(hours) == 0:
+        freq = str(int(hours))+'H'
+    elif minutes>=1 and minutes%int(minutes) == 0:
+        freq = str(int(minutes))+'min'
+    elif seconds>=1 and seconds%int(seconds) == 0:
+        freq = str(int(seconds))+'S'
+    else: 
+        freq =  False
+    return freq
+    
+    
 def time_window_url(paths, public=True, lookback = 7, start_date = False, end_date = False, timezone = 'PST'):
     """
     helper function for cwms_read
@@ -29,14 +72,13 @@ def time_window_url(paths, public=True, lookback = 7, start_date = False, end_da
                data path and time window
                
     """
-    
-   
-    if type(paths)==list: path = '%22%2C%22'.join(paths)
+
+    if isinstance(paths, list): 
+        path = '%22%2C%22'.join(paths)
     else: path = paths
         
     if public:
         url = r'http://pweb.crohms.org/dd/common/web_service/webexec/getjson?timezone=TIMEZONE_&query=%5B%22PATH%22%5D&'
-        #url = r'http://nwp-wmlocal2.nwp.usace.army.mil/common/web_service/webexec/getjson?timezone=TIMEZONE_&query=%5B%22PATH%22%5D&'
     else:
         url = r'http://nwp-wmlocal2.nwp.usace.army.mil/common/web_service/webexec/getjson?timezone=TIMEZONE_&query=%5B%22PATH%22%5D&'
     
@@ -57,7 +99,7 @@ def time_window_url(paths, public=True, lookback = 7, start_date = False, end_da
 
     
 
-def get_cwms(path, public = True, fill = True, **kwargs):
+def get_cwms(paths, public = True, fill = True, set_day = True, **kwargs):
     
     """
     A function to parse CWMS json data from webservice into a pandas dataframe
@@ -106,45 +148,68 @@ def get_cwms(path, public = True, fill = True, **kwargs):
         end_date = kwargs['end_date']
     try:timezone = kwargs['timezone']
     except: timezone = 'PST'
-    url = time_window_url(path,start_date=start_date, end_date=end_date, lookback = lookback, public=public,timezone = timezone)
+    url = time_window_url(paths,start_date=start_date, end_date=end_date, lookback = lookback, public=public,timezone = timezone)
     r = requests.get(url)
     json_data = json.loads(r.text)
     df_list = []
     meta = {}
-    
-    for site in list(path):
-        s = site.split('.')[0]
-        data = json_data[s]
+    if not isinstance(paths, list):
+        paths = [paths]
+    site_dict = {}
+    for path in paths:
+        site = path.split('.')[0]
+        try: site_dict[site].append(path)
+        except KeyError:
+            site_dict.update({site:[path]})
+            
+    for site,path_list in site_dict.items():
+        try:
+            data = json_data[site]
+        except KeyError:
+            sys.stderr.write('No data for %s\n' % site)
+            continue
         lat = data['coordinates']['latitude']
         long = data['coordinates']['longitude']
         tz_offset = data['tz_offset']
-        for path, vals in data['timeseries'].items():
-            
+        tz = data['timezone']
+        for path in path_list:
+            vals = data['timeseries'][path.strip()]
             column_name = '_'.join(path.split('.')[:2])
             column_name = '_'.join(column_name.split('-'))
             try:path_data = vals['values']
-            except KeyError: continue
-                
+            except KeyError: 
+                sys.stderr.write('!No data for %s\n' % path)
+                continue
             date = [val[0] for val in path_data]
             values = [val[1] for val in path_data]
+            flags = [val[2] for val in path_data]
             df= pd.DataFrame({'date': date, column_name: values})
+            flags = pd.DataFrame({'date': date, 'flag': flags})
+            flags = flags[flags['flag']>0].set_index('date')
             df['date'] = pd.to_datetime(df['date'])
             df.set_index('date', inplace = True)
+            if 'D' in get_frequency(df.index) and set_day:
+                df.index = [x.replace(hour = 0, minute = 0, second = 0) for x in df.index]
+                df.index.name = 'date'
             df_list.append(df)
             vals.pop('values', None)
-            vals.update({'path':path, 'lat':lat,'long':long, 'tz_offset':tz_offset})
+            vals.update({'path':path, 'lat':lat,'long':long, 
+                         'tz_offset':tz_offset, 'timezone':tz, 'flags': flags})
             meta.update({column_name:vals})
     
     df = pd.concat(df_list, axis = 1)
     
     if fill:
-        
-        if lookback:
-            end = datetime.now()
-            start = end - timedelta(days=lookback)
-            start_date = (start.year,start.month,start.day)
-            end_date = (end.year,end.month,end.day)
-        df = df.pipe(reindex, start_date, end_date)
+        freq = get_frequency(df.index)
+        if not freq:
+            sys.stderr.write('Unable to determine frequency, returning data frame unfilled')
+        else:
+            if lookback:
+                end = datetime.now()
+                start = end - timedelta(days=lookback)
+                start_date = (start.year,start.month,start.day)
+                end_date = (end.year,end.month,end.day)
+            df = df.pipe(reindex, start_date, end_date, freq)
     df.__dict__['metadata'] = meta
     return df
     
@@ -183,3 +248,7 @@ def site_catalog(site):
     url = url.replace('SITE', site.upper())
     r = requests.get(url)
     return json.loads(r.text)
+
+ 
+
+
