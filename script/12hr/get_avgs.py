@@ -71,7 +71,7 @@ def oregon_method(series:pd.core.series.Series) -> pd.core.frame.DataFrame:
     
     high_quality = series \
                             .groupby(pd.Grouper(level='date', freq='D')) \
-                            .aggregate(lambda x: pd.Series(x).isnull().sum())<7
+                            .aggregate(lambda x: pd.Series(x).dropna().count())>16
     
     
     #set time to 1200 PST in GMT
@@ -108,7 +108,7 @@ def washington_method(series:pd.core.series.Series) -> pd.core.frame.DataFrame:
           calendar day.
         - Round 12 hour average to nearest whole number.
     
-    12 hour values that have 8 or more hours of missing hourly data are flagged 
+    individual values that have 4 or more hours of missing hourly data are flagged 
     as questionable
     
 
@@ -151,18 +151,19 @@ def combine(orgn:pd.core.series.Series, wa:pd.core.series.Series, start_date: tu
     Returns:
         combined: The return value. the 12 hour average of TDG data as described below
         
-    Washington Method:
+    Combined Method:
         The Combined method takes the higher TDG average between the Oregon and 
-        Washington methods and stores it as a daily time series.  
+        Washington methods and stores it as a daily time series.  If a value's
+        quality is rated questionable and the other is not, the non-questionable 
+        data is chosen regardless of which value is higher.
+        
+        
 
     """
     
     wa = wa.pipe(reindex, start_date, end_date, 'D')
     
     orgn = orgn.pipe(reindex, start_date, end_date, 'D')
-    
-    
-    combined = pd.DataFrame(index = wa.index)
   
     combined = orgn.join(wa)
     
@@ -248,10 +249,6 @@ def pd_df_to_instapost(value_df:pd.core.frame.DataFrame, pathname:str, units:str
     return result
 
 
-
-
-
-
  #--------------------------------------------------------------------------------
 # main()
 #--------------------------------------------------------------------------------
@@ -323,7 +320,3 @@ if __name__ == "__main__":
 
             if rawJSON:print(json.dumps(instapost)+"\n---")
             else:print(yaml.dump(instapost))
-        
-        
-        
-

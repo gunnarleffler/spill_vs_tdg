@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import requests
-import sys
 import json
 import pandas as pd
 from datetime import datetime, timedelta
+import sys
 from numpy import median
 
 def reindex(df, start_date, end_date, freq):
@@ -23,8 +23,8 @@ def reindex(df, start_date, end_date, freq):
         df = df.reindex(date)
         df.index.rename('date', inplace = True)
         return df
-    
-def get_frequency(index)->str:
+
+def get_frequency(index: pd.core.indexes.datetimes.DatetimeIndex)->str:
     """
     Args:
         
@@ -99,7 +99,7 @@ def time_window_url(paths, public=True, lookback = 7, start_date = False, end_da
 
     
 
-def get_cwms(path, public = True, fill = True, **kwargs):
+def get_cwms(paths, public = True, fill = True, set_day = True, **kwargs):
     
     """
     A function to parse CWMS json data from webservice into a pandas dataframe
@@ -148,17 +148,23 @@ def get_cwms(path, public = True, fill = True, **kwargs):
         end_date = kwargs['end_date']
     try:timezone = kwargs['timezone']
     except: timezone = 'PST'
-    url = time_window_url(path,start_date=start_date, end_date=end_date, lookback = lookback, public=public,timezone = timezone)
+    url = time_window_url(paths,start_date=start_date, end_date=end_date, lookback = lookback, public=public,timezone = timezone)
     r = requests.get(url)
     json_data = json.loads(r.text)
     df_list = []
     meta = {}
-    if not isinstance(path, list):
-        path = [path]
-    for site in path:
-        s = site.split('.')[0]
+    if not isinstance(paths, list):
+        paths = [paths]
+    site_dict = {}
+    for path in paths:
+        site = path.split('.')[0]
+        try: site_dict[site].append(path)
+        except KeyError:
+            site_dict.update({site:[path]})
+            
+    for site,path_list in site_dict.items():
         try:
-            data = json_data[s]
+            data = json_data[site]
         except KeyError:
             sys.stderr.write('No data for %s\n' % site)
             continue
@@ -166,22 +172,29 @@ def get_cwms(path, public = True, fill = True, **kwargs):
         long = data['coordinates']['longitude']
         tz_offset = data['tz_offset']
         tz = data['timezone']
-        for path, vals in data['timeseries'].items():
-            
+        for path in path_list:
+            vals = data['timeseries'][path.strip()]
             column_name = '_'.join(path.split('.')[:2])
             column_name = '_'.join(column_name.split('-'))
             try:path_data = vals['values']
             except KeyError: 
-                sys.stderr.write('No data for %s\n' % site)
+                sys.stderr.write('!No data for %s\n' % path)
                 continue
             date = [val[0] for val in path_data]
             values = [val[1] for val in path_data]
+            flags = [val[2] for val in path_data]
             df= pd.DataFrame({'date': date, column_name: values})
             df['date'] = pd.to_datetime(df['date'])
+            flags = pd.DataFrame({'date': df['date'], 'flag': flags})
+            flags = flags[flags['flag']>0].set_index('date')
             df.set_index('date', inplace = True)
+            if 'D' in get_frequency(df.index) and set_day:
+                df.index = [x.replace(hour = 0, minute = 0, second = 0) for x in df.index]
+                df.index.name = 'date'
             df_list.append(df)
             vals.pop('values', None)
-            vals.update({'path':path, 'lat':lat,'long':long, 'tz_offset':tz_offset, 'timezone':tz})
+            vals.update({'path':path, 'lat':lat,'long':long, 
+                         'tz_offset':tz_offset, 'timezone':tz, 'flags': flags})
             meta.update({column_name:vals})
     
     df = pd.concat(df_list, axis = 1)
@@ -189,7 +202,7 @@ def get_cwms(path, public = True, fill = True, **kwargs):
     if fill:
         freq = get_frequency(df.index)
         if not freq:
-            sys.stderr.write('Unable to determine frequency, returning data frame unfilled\n')
+            sys.stderr.write('Unable to determine frequency, returning data frame unfilled')
         else:
             if lookback:
                 end = datetime.now()
