@@ -234,7 +234,7 @@ def pd_df_to_instapost(value_df:pd.core.frame.DataFrame, pathname:str, units:str
                             {'value':float(value)}
                     }
         if not quality:
-            loop_dict[str(timestamp)].update({'quality':'QUESTIONABLE'})
+            loop_dict[str(timestamp)].update({'qual':'QUESTIONABLE'})
         timeseries_dict.update(loop_dict)    
         
     result.update(

@@ -21,14 +21,14 @@ outdir_V = outdir =  os.getcwd() + '/../data/'
 indir = os.getcwd() + "/../config/"
 
 #Dan's paths for testing
-outdir_V = outdir =  os.getcwd() 
-indir = r'F:\python_local\spill_vs_tdg\config\\'
+#outdir_V = outdir =  os.getcwd() 
+#indir = r'F:\python_local\spill_vs_tdg\config\\'
 
 file_out_base = 'daily_spill_v_tdg_2'
 
 projects = ['BON_WRNO', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_DG', 'CHJ']
 #projects = ['BON', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_DG', 'CHJ']
-#projects = [ 'BON_WRNO']
+#projects = [ 'CHJ']
 
 
 now = datetime.now()
@@ -318,7 +318,8 @@ for project in projects:
 #    if not df1.count().any():
     title1 += ' {d.month}/{d.day}/{d.year} {d.hour:02}{d.minute:02}'.format(d=now)
     plt.title(title1, y=1.2)
-    filname = outdir + project + '_'  + file_out_base + '.png'
     plt.gcf().subplots_adjust(top=0.8,right=0.8)
+    matplotlib.rcParams.update({'font.size': 6})
+    filname = outdir + project + '_'  + file_out_base + '.png'
     plt.savefig(filname, dpi = 200)
     #os.startfile(filname)
