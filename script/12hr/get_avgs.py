@@ -71,7 +71,7 @@ def oregon_method(series:pd.core.series.Series) -> pd.core.frame.DataFrame:
     
     high_quality = series \
                             .groupby(pd.Grouper(level='date', freq='D')) \
-                            .aggregate(lambda x: pd.Series(x).isnull().sum())<7
+                            .aggregate(lambda x: pd.Series(x).dropna().count())>16
     
     
     #set time to 1200 PST in GMT
@@ -108,7 +108,7 @@ def washington_method(series:pd.core.series.Series) -> pd.core.frame.DataFrame:
           calendar day.
         - Round 12 hour average to nearest whole number.
     
-    12 hour values that have 8 or more hours of missing hourly data are flagged 
+    individual values that have 4 or more hours of missing hourly data are flagged 
     as questionable
     
 
