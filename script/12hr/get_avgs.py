@@ -297,7 +297,7 @@ if __name__ == "__main__":
         path_end = value['path']
         paths.append('{}{}{}'.format(key, path, path_end))
     
-    df = get_cwms(paths, lookback = lookback + 3, fill = True, public = False, timezone = 'PST')
+    df = get_cwms(paths, lookback = lookback + 3, fill = True, public = True, timezone = 'PST')
     meta = df.__dict__['metadata']
 
 
