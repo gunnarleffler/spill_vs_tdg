@@ -21,14 +21,14 @@ outdir_V = outdir =  os.getcwd() + '/../data/'
 indir = os.getcwd() + "/../config/"
 
 #Dan's paths for testing
-#outdir_V = outdir =  os.getcwd() 
-#indir = r'F:\python_local\spill_vs_tdg\config\\'
+outdir_V = outdir =  os.getcwd() 
+indir = r'F:\python_local\spill_vs_tdg\config\\'
 
 file_out_base = 'daily_spill_v_tdg_2'
 
-projects = ['BON_WRNO', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_DG', 'CHJ']
-#projects = ['BON', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_DG', 'CHJ']
-#projects = [ 'CHJ']
+#projects = ['BON_WRNO', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_DG', 'CHJ']
+projects = ['BON', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_OT', 'CHJ']
+#projects = [ 'BON_WRNO']
 
 
 now = datetime.now()
@@ -232,13 +232,18 @@ for project in projects:
 #    if 'GCL' in project:
 #        paths += [outlets[project]['e_fb']['CWMS']]
 
-    df1 = get_cwms(paths, public = True, interval = 'hourly', start_date = start, end_date = end, timezone = 'PST')
+    aaa = get_cwms([paths[0]], public = True, interval = 'hourly', start_date = start, end_date = end, timezone = 'PST')
+    bbb = get_cwms([paths[1]], public = True, interval = 'hourly', start_date = start, end_date = end, timezone = 'PST')
+    df1 = pd.merge(aaa, bbb, left_index=True, right_index=True)
+    ccc = get_cwms([paths[0]], public = True, interval = 'hourly', start_date = start36hr, end_date = end, timezone = 'PST')
+    ddd = get_cwms([paths[1]], public = True, interval = 'hourly', start_date = start36hr, end_date = end, timezone = 'PST')
+    df36hr = pd.merge(ccc, ddd, left_index=True, right_index=True)
+
     df1 = df1[df1>0].dropna()
     df1 = df1[(df1.iloc[:,1]<200)]
-
-    df36hr = get_cwms(paths, public = True, interval = 'hourly', start_date = start36hr, end_date = end, timezone = 'PST')
     df36hr = df36hr[df36hr>0].dropna()
     df36hr = df36hr[(df36hr.iloc[:,1]<200)]
+
 
 
     #bulk_uni_threshold = 32
