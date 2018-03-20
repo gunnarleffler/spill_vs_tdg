@@ -53,3 +53,11 @@ python3 Spill_v_TDG_daily_py36_v1.py
 cd $SCRIPT_DIR/12hr
 python3 ./get_avgs.py -l 5 config.yml -rj > ../../data/12hr.json
 
+############################################################
+#Create overview tables
+############################################################
+cd $SCRIPT_DIR/12hr
+jupyter nbconvert --to html --execute ./columbia.ipynb
+jupyter nbconvert --to html --execute ./snake_river.ipynb
+
+

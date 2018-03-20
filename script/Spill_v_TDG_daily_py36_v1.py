@@ -21,8 +21,8 @@ outdir_V = outdir =  os.getcwd() + '/../data/'
 indir = os.getcwd() + "/../config/"
 
 #Dan's paths for testing
-outdir_V = outdir =  os.getcwd() 
-indir = r'F:\python_local\spill_vs_tdg\config\\'
+#outdir_V = outdir =  os.getcwd() 
+#indir = r'F:\python_local\spill_vs_tdg\config\\'
 
 file_out_base = 'daily_spill_v_tdg_2'
 
@@ -276,8 +276,8 @@ for project in projects:
     if project == 'CHJ_WSBW':
         p = 'CHJ'
     hist_sm = pd.read_csv(indir + p + '_smoothed_P.csv')
-    ax.fill_between(hist_sm['Unnamed: 0'], hist_sm['0.95'], hist_sm['0.05'], alpha = 0.33, label = '5-95th P')
-    ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'b', label = '50th P')
+    ax.fill_between(hist_sm['Unnamed: 0'], hist_sm['0.95'], hist_sm['0.05'], alpha = 0.33, label = '5-95th P (2011-2017)')
+    ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'b', label = '50th P (2011-2017)')
 #    if smooth_df.count().any()>0:
 #        if x_lims[0] > 0:
 #            x_lims = (0.0, x_lims[1])
