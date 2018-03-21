@@ -3,3 +3,5 @@ data/
 *.log
 *.pyc
 .ipynb_checkpoints
+*.html
+
