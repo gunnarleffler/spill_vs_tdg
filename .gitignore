@@ -2,4 +2,6 @@ data/
 .spyproject
 *.log
 *.pyc
+.ipynb_checkpoints
 *.html
+
