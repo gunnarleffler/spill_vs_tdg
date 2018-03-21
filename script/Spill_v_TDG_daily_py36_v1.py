@@ -26,9 +26,9 @@ indir = os.getcwd() + "/../config/"
 
 file_out_base = 'daily_spill_v_tdg_2'
 
-projects = ['BON_WRNO', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_DG', 'CHJ']
-#projects = ['BON', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_DG', 'CHJ']
-#projects = [ 'CHJ']
+#projects = ['BON_WRNO', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_DG', 'CHJ']
+projects = ['BON', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_OT', 'CHJ']
+#projects = [ 'BON_WRNO']
 
 
 now = datetime.now()
@@ -232,13 +232,18 @@ for project in projects:
 #    if 'GCL' in project:
 #        paths += [outlets[project]['e_fb']['CWMS']]
 
-    df1 = get_cwms(paths, public = True, interval = 'hourly', start_date = start, end_date = end, timezone = 'PST')
+    aaa = get_cwms([paths[0]], public = True, interval = 'hourly', start_date = start, end_date = end, timezone = 'PST')
+    bbb = get_cwms([paths[1]], public = True, interval = 'hourly', start_date = start, end_date = end, timezone = 'PST')
+    df1 = pd.merge(aaa, bbb, left_index=True, right_index=True)
+    ccc = get_cwms([paths[0]], public = True, interval = 'hourly', start_date = start36hr, end_date = end, timezone = 'PST')
+    ddd = get_cwms([paths[1]], public = True, interval = 'hourly', start_date = start36hr, end_date = end, timezone = 'PST')
+    df36hr = pd.merge(ccc, ddd, left_index=True, right_index=True)
+
     df1 = df1[df1>0].dropna()
     df1 = df1[(df1.iloc[:,1]<200)]
-
-    df36hr = get_cwms(paths, public = True, interval = 'hourly', start_date = start36hr, end_date = end, timezone = 'PST')
     df36hr = df36hr[df36hr>0].dropna()
     df36hr = df36hr[(df36hr.iloc[:,1]<200)]
+
 
 
     #bulk_uni_threshold = 32
@@ -271,8 +276,8 @@ for project in projects:
     if project == 'CHJ_WSBW':
         p = 'CHJ'
     hist_sm = pd.read_csv(indir + p + '_smoothed_P.csv')
-    ax.fill_between(hist_sm['Unnamed: 0'], hist_sm['0.95'], hist_sm['0.05'], alpha = 0.33, label = '5-95th P')
-    ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'b', label = '50th P')
+    ax.fill_between(hist_sm['Unnamed: 0'], hist_sm['0.95'], hist_sm['0.05'], alpha = 0.33, label = '5-95th P (2011-2017)')
+    ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'b', label = '50th P (2011-2017)')
 #    if smooth_df.count().any()>0:
 #        if x_lims[0] > 0:
 #            x_lims = (0.0, x_lims[1])
