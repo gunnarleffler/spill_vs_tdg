@@ -202,6 +202,7 @@ def get_cwms(paths, public = True, fill = True, set_day = True, **kwargs):
     else: df = pd.concat(df_list, axis = 1)
     
     if fill:
+        freq = get_frequency(df.index)
         if not freq:
             sys.stderr.write('Unable to determine frequency, returning data frame unfilled')
         else:
