@@ -188,7 +188,8 @@ def get_cwms(paths, public = True, fill = True, set_day = True, **kwargs):
             flags = pd.DataFrame({'date': df['date'], 'flag': flags})
             flags = flags[flags['flag']>0].set_index('date')
             df.set_index('date', inplace = True)
-            if 'D' in get_frequency(df.index) and set_day:
+            freq = get_frequency(df.index)
+            if freq and 'D' in freq and set_day:
                 df.index = [x.replace(hour = 0, minute = 0, second = 0) for x in df.index]
                 df.index.name = 'date'
             df_list.append(df)
@@ -201,7 +202,6 @@ def get_cwms(paths, public = True, fill = True, set_day = True, **kwargs):
     else: df = pd.concat(df_list, axis = 1)
     
     if fill:
-        freq = get_frequency(df.index)
         if not freq:
             sys.stderr.write('Unable to determine frequency, returning data frame unfilled')
         else:
