@@ -7,22 +7,26 @@ from datetime import datetime, timedelta
 import sys
 from numpy import median
 
+
 def reindex(df, start_date, end_date, freq):
-        date = pd.date_range(start = datetime(*start_date), end = datetime(*end_date), freq = freq)
-        date = [pd.Timestamp(x) for x in date]
-        if 'D' in freq:
-            index = df.index.copy()
-            index_hours = [x.hour for x in index]
-            m = median(index_hours)
-            def find_remainder(x):
-                return x%m
-            if sum([x%m for x in index_hours])>0:
-                return False
-            else:
-                date = [x.replace(hour = int(m)) for x in date] 
-        df = df.reindex(date)
-        df.index.rename('date', inplace = True)
-        return df
+    start = datetime(*start_date)
+    end = datetime(*end_date)
+    end = end.replace(hour = 23, minute = 0, second = 0)
+    date = pd.date_range(start, end, freq = freq)
+    date = [pd.Timestamp(x) for x in date]
+    if 'D' in freq:
+        index = df.index.copy()
+        index_hours = [x.hour for x in index]
+        m = median(index_hours)
+        def find_remainder(x):
+            return x%m
+        if sum([x%m for x in index_hours])>0:
+            return False
+        else:
+            date = [x.replace(hour = int(m)) for x in date] 
+    df = df.reindex(date)
+    df.index.rename('date', inplace = True)
+    return df
 
 def get_frequency(index: pd.core.indexes.datetimes.DatetimeIndex)->str:
     """
@@ -202,7 +206,10 @@ def get_cwms(paths, public = True, fill = True, set_day = True, **kwargs):
     else: df = pd.concat(df_list, axis = 1)
     
     if fill:
-        freq = get_frequency(df.index)
+        try:
+            freq = kwargs['freq']
+        except KeyError:
+            freq = get_frequency(df.index)
         if not freq:
             sys.stderr.write('Unable to determine frequency, returning data frame unfilled')
         else:
