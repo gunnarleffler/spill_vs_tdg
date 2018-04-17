@@ -1,6 +1,7 @@
-
+#!/usr/bin/env python3
+#!/usr/bin/python
 import sys
-sys.path.append(r'V:\Water_Quality\Turner\python')
+#sys.path.append(r'V:\Water_Quality\Turner\python')
 #import data_download_format_metrics as ddfm
 from datetime import datetime, timedelta
 import numpy as np
@@ -15,10 +16,10 @@ def get_data(url):
         data = urllib.request.urlopen(url).read()
     except urllib.error.HTTPError as e:
         print("HTTP error: %d" % e.code)
-        data = False
+        data = "False"
     except urllib.error.URLError as e:
         print("Network error: %s" % e.reason.args[1])
-        data = False
+        data = "False"
     return data
 
 #function to take csv file from USACE and format into dictionary.
@@ -71,7 +72,8 @@ projects = ['LWG','LGS', 'LMN', 'IHR', 'MCN', 'JDA', 'TDA', 'BON']
 #projects = ['LGS']
 
 print('Start project operations and downstream TDG')
-outdir = r'F:\daily_spill_cap_analysis\\'
+#outdir = r'F:\daily_spill_cap_analysis\\'
+outdir = r'/home/rwcds/dx/nwdp/wq_tools/data/'
 lag_days = 14
 forecast_days = 6
 now = datetime.now() + timedelta(1)
@@ -288,7 +290,8 @@ for site in projects:
     plt_name = project + '_spill_TDG_TS'
     #Information needed to build a url for the web service
     #Things like data range and units are embedded and format (i.e. csv)
-    base_url1 = 'http://nwp-wmlocal2.nwp.usace.army.mil/common/web_service/webexec/csv?id='
+    #base_url1 = 'http://nwp-wmlocal2.nwp.usace.army.mil/common/web_service/webexec/csv?id='
+    base_url1 = 'http://pweb.crohms.org/common/web_service/webexec/csv?id='
     data_dict = {}
     gage_dict = {}
     

@@ -1,100 +1,116 @@
 nwdp wq_tools wq_tools.sh is not configured to run on this node
 /usr/local/lib/python3.5/dist-packages/statsmodels/compat/pandas.py:56: FutureWarning: The pandas.core.datetools module is deprecated and will be removed in a future version. Please use the pandas.tseries module instead.
   from pandas.core import datetools
-/usr/local/lib/python3.5/dist-packages/pandas/core/computation/check.py:17: UserWarning: The installed version of numexpr 2.4.3 is not supported in pandas and will be not be used
-The minimum supported version is 2.4.6
-
-  ver=ver, min_ver=_MIN_NUMEXPR_VERSION), UserWarning)
-/usr/local/lib/python3.5/dist-packages/statsmodels/nonparametric/smoothers_lowess.py:165: RuntimeWarning: invalid value encountered in true_divide
-  res = _lowess(y, x, frac=frac, it=it, delta=delta)
-/usr/lib/python3/dist-packages/numpy/lib/function_base.py:3558: RuntimeWarning: Invalid value encountered in median
-  RuntimeWarning)
-/usr/local/lib/python3.5/dist-packages/statsmodels/nonparametric/smoothers_lowess.py:165: RuntimeWarning: invalid value encountered in greater_equal
-  res = _lowess(y, x, frac=frac, it=it, delta=delta)
 /usr/lib/python3/dist-packages/numpy/core/_methods.py:59: RuntimeWarning: Mean of empty slice.
   warnings.warn("Mean of empty slice.", RuntimeWarning)
 /usr/lib/python3/dist-packages/numpy/core/_methods.py:70: RuntimeWarning: invalid value encountered in double_scalars
   ret = ret.dtype.type(ret / rcount)
-110 36
-115 36
-116 36
-117 36
-118 36
-119 36
-120 36
-122 36
-125 36
-127 36
-130 36
-135 36
-110 <79
-115 <79
-116 <79
-117 <79
-118 <79
-119 89
-120 >120
-122 >120
-125 >120
-127 >120
-130 >120
-135 >120
-110 21
-115 >27
-116 >27
-117 >27
-118 >27
-119 >27
-120 >27
-122 >27
-125 >27
-127 >27
-130 >27
-135 >27
-110 5
-115 5
-116 5
-117 5
-118 5
-119 5
-120 5
-122 5
-125 5
-127 5
-130 5
-135 5
-110 >15
-115 >15
-116 >15
-117 >15
-118 >15
-119 >15
-120 >15
-122 >15
-125 >15
-127 >15
-130 >15
-135 >15
-110 >26
-115 >26
-116 >26
-117 >26
-118 >26
-119 >26
-120 >26
-122 >26
-125 >26
-127 >26
-130 >26
-135 >26
-No data for LGSA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
-No data for TDA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
-No data for LWG.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
-No data for IHRA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
-No data for MCNA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
-No data for BON.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
-No data for LMNA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
-No data for CHQW.%-Saturation-TDG.Inst.1Hour.0.NWSRADIO-COMPUTED-REV
-No data for CCIW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
-No data for CWMW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
-No data for JDY.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
+110 <120
+115 <120
+116 <120
+117 <120
+118 <120
+119 <120
+120 124
+122 >130
+125 >130
+127 >130
+130 >130
+135 >130
+110 <98
+115 <98
+116 <98
+117 <98
+118 107
+119 123
+120 >124
+122 >124
+125 >124
+127 >124
+130 >124
+135 >124
+110 <131
+115 <131
+116 <131
+117 <131
+118 <131
+119 >146
+120 >146
+122 >146
+125 >146
+127 >146
+130 >146
+135 >146
+110 <132
+115 <132
+116 <132
+117 190
+118 190
+119 194
+120 >198
+122 >198
+125 >198
+127 >198
+130 >198
+135 >198
+110 <92
+115 <92
+116 <92
+117 <92
+118 <92
+119 <92
+120 94
+122 >96
+125 >96
+127 >96
+130 >96
+135 >96
+110 <32
+115 <32
+116 <32
+117 <32
+118 42
+119 >44
+120 >44
+122 >44
+125 >44
+127 >44
+130 >44
+135 >44
+110 <29
+115 32
+116 34
+117 >36
+118 >36
+119 >36
+120 >36
+122 >36
+125 >36
+127 >36
+130 >36
+135 >36
+110 <45
+115 <45
+116 <45
+117 <45
+118 45
+119 >49
+120 >49
+122 >49
+125 >49
+127 >49
+130 >49
+135 >49
+./get_avgs.py:123: FutureWarning: 
+Passing list-likes to .loc or [] with any missing label will raise
+KeyError in the future, you can use .reindex() as an alternative.
+
+See the documentation here:
+http://pandas.pydata.org/pandas-docs/stable/indexing.html#deprecate-loc-reindex-listlike
+  loc[roll_mean.groupby(pd.Grouper(level='date', freq='D')).idxmax()] \
+[NbConvertApp] Converting notebook ./columbia.ipynb to html
+[NbConvertApp] Executing notebook with kernel: python3
+[NbConvertApp] Writing 352263 bytes to ./columbia.html
+[NbConvertApp] Converting notebook ./snake_river.ipynb to html
+[NbConvertApp] Executing notebook with kernel: python3
+[NbConvertApp] Writing 352308 bytes to ./snake_river.html
