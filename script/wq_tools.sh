@@ -47,6 +47,8 @@ cd $SCRIPT_DIR
 
 find . -name "*.pyc" | xargs rm
 
+python3 Timeseries_spill_TDG_plus_py36_v1.py
+
 python3 Spill_v_TDG_daily_py36_v1.py
 
 ############################################################

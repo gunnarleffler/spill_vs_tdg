@@ -1,7 +1,4 @@
-
-import sys
-sys.path.append(r'V:\Water_Quality\Turner\python')
-#import data_download_format_metrics as ddfm
+#!/usr/bin/python3
 from datetime import datetime, timedelta
 import numpy as np
 from bokeh.plotting import figure, output_file, save, ColumnDataSource, reset_output, show
@@ -72,7 +69,8 @@ projects = ['LWG','LGS', 'LMN', 'IHR', 'MCN', 'JDA', 'TDA', 'BON']
 #projects = ['LGS']
 
 print('Start project operations and downstream TDG')
-outdir = r'F:\daily_spill_cap_analysis\\'
+#outdir = r'F:\daily_spill_cap_analysis\\'
+outdir = r'../data/'
 lag_days = 18
 forecast_days = 6
 now = datetime.now() + timedelta(1)
