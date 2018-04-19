@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
-#!/usr/bin/python
+
 import sys
-#sys.path.append(r'V:\Water_Quality\Turner\python')
+sys.path.append(r'V:\Water_Quality\Turner\python')
 #import data_download_format_metrics as ddfm
 from datetime import datetime, timedelta
 import numpy as np
@@ -9,6 +8,7 @@ from bokeh.plotting import figure, output_file, save, ColumnDataSource, reset_ou
 from bokeh.models import HoverTool, Legend
 from bokeh.layouts import column
 import urllib.request, urllib.error, urllib.parse
+from dateutil.parser import parse
 
 #function to call webservice and return data
 def get_data(url):
@@ -16,10 +16,10 @@ def get_data(url):
         data = urllib.request.urlopen(url).read()
     except urllib.error.HTTPError as e:
         print("HTTP error: %d" % e.code)
-        data = "False"
+        data = False
     except urllib.error.URLError as e:
         print("Network error: %s" % e.reason.args[1])
-        data = "False"
+        data = False
     return data
 
 #function to take csv file from USACE and format into dictionary.
@@ -31,10 +31,10 @@ def format_USACE_to_dictionary(csv_input, delimitor = ',', min_threshold = -1e6,
     for row in site_data_split[1:]:
         line = row.split(delimitor)
         try:
-            dt = datetime.strptime(line[0], "%Y-%m-%d %H:%M")
+            dt = parse(line[0], fuzzy=True)
         except ValueError:
             if print_errors == True:
-                print('Invalid Value, row = ', row)
+                print('Invalid Date, row = ', row)
             continue
         try:
             meas = float(line[1])
@@ -72,9 +72,8 @@ projects = ['LWG','LGS', 'LMN', 'IHR', 'MCN', 'JDA', 'TDA', 'BON']
 #projects = ['LGS']
 
 print('Start project operations and downstream TDG')
-#outdir = r'F:\daily_spill_cap_analysis\\'
-outdir = r'/home/rwcds/dx/nwdp/wq_tools/data/'
-lag_days = 14
+outdir = r'F:\daily_spill_cap_analysis\\'
+lag_days = 18
 forecast_days = 6
 now = datetime.now() + timedelta(1)
 end = now.strftime("%m/%d/%Y")
@@ -98,6 +97,8 @@ SiteInfo['LWG'] = {'Qtotal':{'file':'LWG.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_us_FB':{'file':'LWG.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_TW':{'file':'LGNW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_FB':{'file':'LGSA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
+                     'TDG_ds_TW_12hr_c':{'file':'LGNW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
+                     'TDG_ds_FB_12hr_c':{'file':'LGSA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'Pres_Air_ds_TW':{'file':'LGNW.Pres-Air.Inst.1Hour.0.GOES-REV'},\
                      'Temp_us_FB':{'file':'LWG.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'LGNW.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -117,6 +118,8 @@ SiteInfo['LGS'] = {'Qtotal':{'file':'LGS.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_us_FB':{'file':'LGSA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_TW':{'file':'LGSW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_FB':{'file':'LMNA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
+                     'TDG_ds_TW_12hr_c':{'file':'LGSW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
+                     'TDG_ds_FB_12hr_c':{'file':'LMNA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'Pres_Air_ds_TW':{'file':'LGSW.Pres-Air.Inst.1Hour.0.GOES-REV'},\
                      'Temp_us_FB':{'file':'LGSA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'LGSW.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -136,6 +139,8 @@ SiteInfo['LMN'] = {'Qtotal':{'file':'LMN.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_us_FB':{'file':'LMNA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_TW':{'file':'LMNW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_FB':{'file':'IHRA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
+                     'TDG_ds_TW_12hr_c':{'file':'LMNW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
+                     'TDG_ds_FB_12hr_c':{'file':'IHRA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'Pres_Air_ds_TW':{'file':'LMNW.Pres-Air.Inst.1Hour.0.GOES-REV'},\
                      'Temp_us_FB':{'file':'LMNA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'LMNW.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -155,6 +160,8 @@ SiteInfo['IHR'] = {'Qtotal':{'file':'IHR.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_us_FB':{'file':'IHRA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_TW':{'file':'IDSW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_FB':{'file':'MCNA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
+                     'TDG_ds_TW_12hr_c':{'file':'IDSW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
+                     'TDG_ds_FB_12hr_c':{'file':'MCNA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'Pres_Air_ds_TW':{'file':'IDSW.Pres-Air.Inst.1Hour.0.GOES-REV'},\
                      'Temp_us_FB':{'file':'IHRA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'IDSW.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -174,6 +181,8 @@ SiteInfo['MCN'] = {'Qtotal':{'file':'MCN.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_us_FB':{'file':'MCNA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_TW':{'file':'MCPW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_FB':{'file':'JDY.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
+                     'TDG_ds_TW_12hr_c':{'file':'MCPW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
+                     'TDG_ds_FB_12hr_c':{'file':'JDY.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'Pres_Air_ds_TW':{'file':'MCPW.Pres-Air.Inst.1Hour.0.GOES-REV'},\
                      'Temp_us_FB':{'file':'MCNA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'MCPW.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -193,6 +202,8 @@ SiteInfo['JDA'] = {'Qtotal':{'file':'JDA.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_us_FB':{'file':'JDY.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_TW':{'file':'JHAW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_FB':{'file':'TDA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
+                     'TDG_ds_TW_12hr_c':{'file':'JHAW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
+                     'TDG_ds_FB_12hr_c':{'file':'TDA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'Pres_Air_ds_TW':{'file':'JHAW.Pres-Air.Inst.1Hour.0.GOES-REV'},\
                      'Temp_us_FB':{'file':'JDY.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'JHAW.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -212,6 +223,8 @@ SiteInfo['TDA'] = {'Qtotal':{'file':'TDA.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_us_FB':{'file':'TDA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_TW':{'file':'TDDO.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_FB':{'file':'BON.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
+                     'TDG_ds_TW_12hr_c':{'file':'TDDO.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
+                     'TDG_ds_FB_12hr_c':{'file':'BON.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'Pres_Air_ds_TW':{'file':'TDDO.Pres-Air.Inst.1Hour.0.GOES-REV'},\
                      'Temp_us_FB':{'file':'TDA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'TDDO.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -232,6 +245,8 @@ SiteInfo['BON'] = {'Qtotal':{'file':'BON.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_us_FB':{'file':'BON.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_TW':{'file':'CCIW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
 #                     'TDG_ds_FB':{'file':'CWMW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
+                     'TDG_ds_TW_12hr_c':{'file':'CCIW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
+#                     'TDG_ds_FB_12hr_c':{'file':'CWMW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\                     
                      'Pres_Air_ds_TW':{'file':'CCIW.Pres-Air.Inst.1Hour.0.GOES-REV'},\
                      'Temp_us_FB':{'file':'BON.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'TDDO.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -273,6 +288,8 @@ plot_info = {'Qspill_percent':{'color':'black','style':'--', 'bokeh_style':'dott
               'TDG_in2':{'color':'purple', 'style':':', 'bokeh_style':'dotted','label':'TDG inflow', 'lw':1},\
               'TDG115':{'color':'Indigo', 'style':'--', 'bokeh_style':'dotted','label':'Forebay Crit.', 'lw':2},\
               'TDG120':{'color':'DarkCyan', 'style':'--', 'bokeh_style':'dotted','label':'Tailrace Crit.', 'lw':2},\
+              'TDG_ds_TW_12hr_c':{'color':'DarkCyan', 'style':'--', 'bokeh_style':'solid','label':'Tailrace Crit.', 'lw':4, 'alpha':0.33},\
+              'TDG_ds_FB_12hr_c':{'color':'Indigo', 'style':'--', 'bokeh_style':'solid','label':'Tailrace Crit.', 'lw':4, 'alpha':0.25},\
               'Temp_ds_FB':{'color':'black', 'style':'-', 'bokeh_style':'solid','label':'d/s Forebay', 'lw':1},\
               'Temp_ds_TW':{'color':'red', 'style':'-', 'bokeh_style':'solid','label':'d/s Tailrace', 'lw':1},\
               'Temp_us_FB':{'color':'blue', 'style':'-', 'bokeh_style':'solid','label':'u/s Forebay', 'lw':1},\
@@ -290,8 +307,8 @@ for site in projects:
     plt_name = project + '_spill_TDG_TS'
     #Information needed to build a url for the web service
     #Things like data range and units are embedded and format (i.e. csv)
-    #base_url1 = 'http://nwp-wmlocal2.nwp.usace.army.mil/common/web_service/webexec/csv?id='
-    base_url1 = 'http://pweb.crohms.org/common/web_service/webexec/csv?id='
+#    base_url1 = 'http://nwp-wmlocal2.nwp.usace.army.mil/common/web_service/webexec/csv?id='
+    base_url1 = 'http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id='
     data_dict = {}
     gage_dict = {}
     
@@ -310,6 +327,22 @@ for site in projects:
         url = '%s%s%s&startdate=%s&enddate=%s&timezone=MST&headers=true' % (base_url1, gage, units, start, end)
         site_data = get_data(url).decode()
         gage_dict[TDG_site] = format_USACE_to_dictionary(site_data)
+
+    for TDG_site in ['TDG_ds_TW_12hr_c', 'TDG_ds_FB_12hr_c']:
+        if TDG_site not in SiteInfo[project]: continue
+        gage = SiteInfo[project][TDG_site]['file']
+        units = ''
+        url = '%s%s%s&startdate=%s&enddate=%s&timezone=MST&headers=true' % (base_url1, gage, units, start, end)
+        site_data = get_data(url).decode()
+        dict_aaa = format_USACE_to_dictionary(site_data)
+        dict_bbb = {}
+        for dt, value in dict_aaa.items():
+            dt1 = datetime(dt.year, dt.month, dt.day, 0, 0)
+            dt2 = datetime(dt.year, dt.month, dt.day, 23, 59)
+            dict_bbb[dt1] = value
+            dict_bbb[dt2] = value
+        gage_dict[TDG_site] = dict_bbb
+        
     for Temp_site in ['Temp_us_FB', 'Temp_ds_TW', 'Temp_ds_FB', 'Wind_obs', 'Pres_Air_ds_TW',  'Temp_air_obs']:
         if Temp_site not in SiteInfo[project]: continue
         gage = SiteInfo[project][Temp_site]['file']
@@ -428,19 +461,23 @@ for site in projects:
                 x_axis_label=str(start_dt.year), y_axis_label='TDG (% saturation)', tools=TOOLS)
     s2.xgrid.grid_line_color = 'white'
     s2.ygrid.grid_line_color = 'white'
-    for gage in ['TDG_us_FB', 'TDG_ds_TW', 'TDG_ds_FB', 'TDG_in1', 'TDG_in2', 'TDG115','TDG120' ]:
+    for gage in ['TDG_us_FB', 'TDG_ds_TW', 'TDG_ds_FB', 'TDG_in1', 'TDG_in2', 'TDG115','TDG120']:
         if gage not in gage_lists: continue
         if gage in SiteInfo[project]:
             label_sting = SiteInfo[project][gage]['file'].split('.')[0] + ' '  + plot_info[gage]['label']
         else:
             label_sting = plot_info[gage]['label']
+        if 'alpha' not in plot_info[gage]:
+            alpha1 = 1.0
+        else:
+            alpha1 = plot_info[gage]['alpha']
         source = ColumnDataSource(data={
                     'dateX': gage_lists[gage]["dates_bokeh_TZbug"], # python datetime object as X axis
                     'v': gage_lists[gage]["meas"],
                     'site': [label_sting] * len(gage_lists[gage]["dates"]),
                     'dateX_str': [datetime.strftime(dt, '%m/%d %H:%M') for dt in gage_lists[gage]["dates"]], #string of datetime for display in tooltip
                 })
-        l = s2.line('dateX', 'v',source=source,color = plot_info[gage]['color'], alpha = 1.0, line_dash = plot_info[gage]['bokeh_style'], line_width = plot_info[gage]['lw'])
+        l = s2.line('dateX', 'v',source=source,color = plot_info[gage]['color'], alpha = alpha1, line_dash = plot_info[gage]['bokeh_style'], line_width = plot_info[gage]['lw'])
         myLegendList.append((label_sting,[l]))
         circle = s2.circle('dateX', 'v',source=source, size=6, color = plot_info[gage]['color'], alpha = 0.0)
     hover = s2.select(dict(type=HoverTool))
@@ -542,8 +579,45 @@ for site in projects:
     legend = Legend(items = myLegendList, location = (40,0))
     s5.add_layout(legend, 'above')
     s5.legend.orientation = "horizontal"
-    
-    p = column(s1, s2, s3, s4, s5)
+
+    #TDG plot with 12 hour calc.
+    dates = gage_lists['Qtotal']["dates_bokeh_TZbug"]
+    dates2 = gage_lists['Qtotal']["dates_bokeh_TZbug"]
+    gage_lists['TDG115'] = {'dates_bokeh_TZbug':dates2, 'meas':[115]*len(dates), 'dates' : dates}
+    gage_lists['TDG120'] = {'dates_bokeh_TZbug':dates2, 'meas':[120]*len(dates), 'dates' : dates}
+    myLegendList = []
+    s6 = figure(plot_width=900, plot_height=400, x_range=s1.x_range, title=title1,  x_axis_type='datetime',
+                x_axis_label=str(start_dt.year), y_axis_label='TDG (% saturation)', tools=TOOLS)
+    s6.xgrid.grid_line_color = 'white'
+    s6.ygrid.grid_line_color = 'white'
+    for gage in ['TDG_ds_TW', 'TDG_ds_FB', 'TDG115','TDG120','TDG_ds_TW_12hr_c','TDG_ds_FB_12hr_c' ]:
+        if gage not in gage_lists: continue
+        if gage in SiteInfo[project]:
+            label_sting = SiteInfo[project][gage]['file'].split('.')[0] + ' '  + plot_info[gage]['label']
+        else:
+            label_sting = plot_info[gage]['label']
+        if 'alpha' not in plot_info[gage]:
+            alpha1 = 1.0
+        else:
+            alpha1 = plot_info[gage]['alpha']
+        source = ColumnDataSource(data={
+                    'dateX': gage_lists[gage]["dates_bokeh_TZbug"], # python datetime object as X axis
+                    'v': gage_lists[gage]["meas"],
+                    'site': [label_sting] * len(gage_lists[gage]["dates"]),
+                    'dateX_str': [datetime.strftime(dt, '%m/%d %H:%M') for dt in gage_lists[gage]["dates"]], #string of datetime for display in tooltip
+                })
+        l = s6.line('dateX', 'v',source=source,color = plot_info[gage]['color'], alpha = alpha1, line_dash = plot_info[gage]['bokeh_style'], line_width = plot_info[gage]['lw'])
+        myLegendList.append((label_sting,[l]))
+        circle = s6.circle('dateX', 'v',source=source, size=6, color = plot_info[gage]['color'], alpha = 0.0)
+    hover = s6.select(dict(type=HoverTool))
+    hover.tooltips = [("site", "@site"), ("date", "@dateX_str"), ("value", "@v")]
+    hover.mode = 'mouse'
+    legend = Legend(items = myLegendList, location = (40,0))
+    s6.add_layout(legend, 'above')
+    s6.legend.orientation = "horizontal"
+
+
+    p = column(s1, s2, s5, s3, s4, s6)
     
     # show the results
 #    show(p)
