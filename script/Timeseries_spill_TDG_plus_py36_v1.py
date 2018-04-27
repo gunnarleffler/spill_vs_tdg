@@ -69,8 +69,8 @@ projects = ['LWG','LGS', 'LMN', 'IHR', 'MCN', 'JDA', 'TDA', 'BON']
 #projects = ['LGS']
 
 print('Start project operations and downstream TDG')
-#outdir = r'F:\daily_spill_cap_analysis\\'
-outdir = r'../data/'
+outdir = r'C:\spill_eval_local\\'
+#outdir = r'../data/'
 lag_days = 18
 forecast_days = 6
 now = datetime.now() + timedelta(1)
@@ -358,12 +358,13 @@ for site in projects:
         url = '%s%s%s&startdate=%s&enddate=%s&timezone=MST&headers=true' % (base_url1, gage, units, start2, end2)
         site_data = get_data(url).decode()
         #Need a plus 7 hour time adjustment on these forecasts
-        temp_dict = format_USACE_to_dictionary(site_data)
-        temp_dict2 = {}
-        for dt, value in temp_dict.items():
-            dt2 = dt + timedelta(hours=7)
-            temp_dict2[dt2] = value
-        gage_dict[Fcst_site] = temp_dict2        
+#        temp_dict = format_USACE_to_dictionary(site_data)
+#        temp_dict2 = {}
+#        for dt, value in temp_dict.items():
+#            dt2 = dt + timedelta(hours=7)
+#            temp_dict2[dt2] = value
+#        gage_dict[Fcst_site] = temp_dict2        
+        gage_dict[Fcst_site] = format_USACE_to_dictionary(site_data)
     for Fcst_site in ['Qtotal_fcst']:
         if Fcst_site not in SiteInfo[project]: continue
         gage = SiteInfo[project][Fcst_site]['file']
