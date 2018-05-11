@@ -7,6 +7,9 @@ from bokeh.layouts import column
 import urllib.request, urllib.error, urllib.parse
 from dateutil.parser import parse
 
+#barometric pressure forecast adjusted using the following comparison between observed and forecast:
+#V:\Water_Quality\Gauge Info\barometric pressure adjustments for forecast.xlsx
+
 #function to call webservice and return data
 def get_data(url):
     try:
@@ -66,17 +69,21 @@ def format_dict_date_to_list_for_plot(indict, ignore = [], print_errors = True):
     return new_dates, meas
 
 projects = ['LWG','LGS', 'LMN', 'IHR', 'MCN', 'JDA', 'TDA', 'BON']
-#projects = ['LGS']
+#projects = ['LWG']
 
 print('Start project operations and downstream TDG')
-outdir = r'C:\spill_eval_local\\'
-#outdir = r'../data/'
+#outdir = r'C:\spill_eval_local\\'
+outdir = r'../data/'
 lag_days = 18
-forecast_days = 6
+forecast_days = 11
 now = datetime.now() + timedelta(1)
 end = now.strftime("%m/%d/%Y")
 past = now - timedelta(lag_days)
+past = datetime(2018, 4, 1)
 start = past.strftime("%m/%d/%Y")
+end2 = (now + timedelta(forecast_days)).strftime("%m/%d/%Y")
+now2 = datetime.now() + timedelta(-1)
+start2 = now2.strftime("%m/%d/%Y")
 
 SiteInfo = {}
 
@@ -89,6 +96,7 @@ SiteInfo['DWR'] = {'Qtotal':{'file':'DWR.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
 
 SiteInfo['LWG'] = {'Qtotal':{'file':'LWG.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                     'Qtotal_fcst':{'file':'LWG.Flow-Out.Inst.~6Hours.0.MODEL-STP-FCST'},\
+                    'Qtotal_fcst_RFC':{'file':'LWG.Flow-In.Inst.~6Hours.0.RFC-WFO-FCST'},\
                      'Qspill':{'file':'LWG.Flow-Spill.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qpower':{'file':'LWG.Flow-Gen.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qspill_cap':{'file':'LWG.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB'},\
@@ -98,6 +106,7 @@ SiteInfo['LWG'] = {'Qtotal':{'file':'LWG.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_ds_TW_12hr_c':{'file':'LGNW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'TDG_ds_FB_12hr_c':{'file':'LGSA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'Pres_Air_ds_TW':{'file':'LGNW.Pres-Air.Inst.1Hour.0.GOES-REV'},\
+                     'Pres_Air_ds_TW_fcst':{'file':'SILW.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST', 'adjust':49.551},\
                      'Temp_us_FB':{'file':'LWG.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'LGNW.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_FB':{'file':'LGSA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -110,6 +119,7 @@ SiteInfo['LWG'] = {'Qtotal':{'file':'LWG.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
 
 SiteInfo['LGS'] = {'Qtotal':{'file':'LGS.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                     'Qtotal_fcst':{'file':'LGS.Flow-Out.Inst.~6Hours.0.MODEL-STP-FCST'},\
+                    'Qtotal_fcst_RFC':{'file':'LGS.Flow-In.Inst.~6Hours.0.RFC-WFO-FCST'},\
                      'Qspill':{'file':'LGS.Flow-Spill.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qpower':{'file':'LGS.Flow-Gen.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qspill_cap':{'file':'LGS.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB'},\
@@ -119,6 +129,7 @@ SiteInfo['LGS'] = {'Qtotal':{'file':'LGS.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_ds_TW_12hr_c':{'file':'LGSW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'TDG_ds_FB_12hr_c':{'file':'LMNA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'Pres_Air_ds_TW':{'file':'LGSW.Pres-Air.Inst.1Hour.0.GOES-REV'},\
+                     'Pres_Air_ds_TW_fcst':{'file':'LBRW.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST', 'adjust':26.2827963},\
                      'Temp_us_FB':{'file':'LGSA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'LGSW.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_FB':{'file':'LMNA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -131,6 +142,7 @@ SiteInfo['LGS'] = {'Qtotal':{'file':'LGS.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
 
 SiteInfo['LMN'] = {'Qtotal':{'file':'LMN.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                     'Qtotal_fcst':{'file':'LMN.Flow-Out.Inst.~6Hours.0.MODEL-STP-FCST'},\
+                    'Qtotal_fcst_RFC':{'file':'LMN.Flow-In.Inst.~6Hours.0.RFC-WFO-FCST'},\
                      'Qspill':{'file':'LMN.Flow-Spill.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qpower':{'file':'LMN.Flow-Gen.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qspill_cap':{'file':'LMN.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB'},\
@@ -140,6 +152,7 @@ SiteInfo['LMN'] = {'Qtotal':{'file':'LMN.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_ds_TW_12hr_c':{'file':'LMNW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'TDG_ds_FB_12hr_c':{'file':'IHRA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'Pres_Air_ds_TW':{'file':'LMNW.Pres-Air.Inst.1Hour.0.GOES-REV'},\
+                     'Pres_Air_ds_TW_fcst':{'file':'PSCW.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST', 'adjust':2.7831875},\
                      'Temp_us_FB':{'file':'LMNA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'LMNW.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_FB':{'file':'IHRA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -152,6 +165,7 @@ SiteInfo['LMN'] = {'Qtotal':{'file':'LMN.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
 
 SiteInfo['IHR'] = {'Qtotal':{'file':'IHR.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                     'Qtotal_fcst':{'file':'IHR.Flow-Out.Inst.~6Hours.0.MODEL-STP-FCST'},\
+                    'Qtotal_fcst_RFC':{'file':'IHR.Flow-In.Inst.~6Hours.0.RFC-WFO-FCST'},\
                      'Qspill':{'file':'IHR.Flow-Spill.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qpower':{'file':'IHR.Flow-Gen.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qspill_cap':{'file':'IHR.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB'},\
@@ -161,6 +175,7 @@ SiteInfo['IHR'] = {'Qtotal':{'file':'IHR.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_ds_TW_12hr_c':{'file':'IDSW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'TDG_ds_FB_12hr_c':{'file':'MCNA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'Pres_Air_ds_TW':{'file':'IDSW.Pres-Air.Inst.1Hour.0.GOES-REV'},\
+                     'Pres_Air_ds_TW_fcst':{'file':'PSCW.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST', 'adjust':6.606986111},\
                      'Temp_us_FB':{'file':'IHRA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'IDSW.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_FB':{'file':'MCNA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -173,6 +188,7 @@ SiteInfo['IHR'] = {'Qtotal':{'file':'IHR.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
 
 SiteInfo['MCN'] = {'Qtotal':{'file':'MCN.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                     'Qtotal_fcst':{'file':'MCN.Flow-Out.Inst.~6Hours.0.MODEL-STP-FCST'},\
+                    'Qtotal_fcst_RFC':{'file':'MCN.Flow-In.Inst.~6Hours.0.RFC-FCST'},\
                      'Qspill':{'file':'MCN.Flow-Spill.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qpower':{'file':'MCN.Flow-Gen.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qspill_cap':{'file':'MCN.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB'},\
@@ -182,10 +198,11 @@ SiteInfo['MCN'] = {'Qtotal':{'file':'MCN.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_ds_TW_12hr_c':{'file':'MCPW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'TDG_ds_FB_12hr_c':{'file':'JDY.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'Pres_Air_ds_TW':{'file':'MCPW.Pres-Air.Inst.1Hour.0.GOES-REV'},\
+                     'Pres_Air_ds_TW_fcst':{'file':'HERO.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST', 'adjust':24.614375},\
                      'Temp_us_FB':{'file':'MCNA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'MCPW.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_FB':{'file':'JDY.Temp-Water.Inst.1Hour.0.GOES-REV'},\
-                     'Wind_obs':{'file':'HERO.Speed-Wind.Ave.15Minutes.15Minutes.MIXED-REV'},\
+                     'Wind_obs':{'file':'HERO.Speed-Wind.Ave.1Hour.0.USBR-COMPUTED-REV'},\
                      'Wind_fcst':{'file':'HERO.Speed-Wind.Inst.~3Hours.0.NOAA-FCST'},\
                      'Temp_air_obs':{'file':'HERO.Temp-Air.Inst.0.0.MIXED-REV'},\
                      'Temp_air_fcst':{'file':'HERO.Temp-Air.Inst.~3Hours.0.NOAA-FCST'},\
@@ -194,6 +211,7 @@ SiteInfo['MCN'] = {'Qtotal':{'file':'MCN.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
 
 SiteInfo['JDA'] = {'Qtotal':{'file':'JDA.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qtotal_fcst':{'file':'JDA.Flow-In.Inst.~6Hours.0.RFC-FCST'},\
+                     'Qtotal_fcst_RFC':{'file':'JDA.Flow-In.Inst.~6Hours.0.RFC-FCST'},\
                      'Qspill':{'file':'JDA.Flow-Spill.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qpower':{'file':'JDA.Flow-Gen.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qspill_cap':{'file':'JDA.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB'},\
@@ -203,6 +221,7 @@ SiteInfo['JDA'] = {'Qtotal':{'file':'JDA.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_ds_TW_12hr_c':{'file':'JHAW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'TDG_ds_FB_12hr_c':{'file':'TDA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'Pres_Air_ds_TW':{'file':'JHAW.Pres-Air.Inst.1Hour.0.GOES-REV'},\
+                     'Pres_Air_ds_TW_fcst':{'file':'DLS.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST', 'adjust':34.40625},\
                      'Temp_us_FB':{'file':'JDY.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'JHAW.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_FB':{'file':'TDA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -215,6 +234,7 @@ SiteInfo['JDA'] = {'Qtotal':{'file':'JDA.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
 
 SiteInfo['TDA'] = {'Qtotal':{'file':'TDA.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qtotal_fcst':{'file':'TDA.Flow-In.Inst.~6Hours.0.RFC-FCST'},\
+                     'Qtotal_fcst_RFC':{'file':'TDA.Flow-In.Inst.~6Hours.0.RFC-FCST'},\
                      'Qspill':{'file':'TDA.Flow-Spill.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qpower':{'file':'TDA.Flow-Gen.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qspill_cap':{'file':'TDA.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB'},\
@@ -224,6 +244,7 @@ SiteInfo['TDA'] = {'Qtotal':{'file':'TDA.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_ds_TW_12hr_c':{'file':'TDDO.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'TDG_ds_FB_12hr_c':{'file':'BON.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
                      'Pres_Air_ds_TW':{'file':'TDDO.Pres-Air.Inst.1Hour.0.GOES-REV'},\
+                     'Pres_Air_ds_TW_fcst':{'file':'DLS.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST', 'adjust':44.33465278},\
                      'Temp_us_FB':{'file':'TDA.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'TDDO.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_FB':{'file':'TDDO.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -235,7 +256,8 @@ SiteInfo['TDA'] = {'Qtotal':{'file':'TDA.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      }
 
 SiteInfo['BON'] = {'Qtotal':{'file':'BON.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
-                     'Qtotal_fcst':{'file':'BON.Flow-In.Inst.~6Hours.0.RFC-FCST'},\
+                     'Qtotal_fcst':{'file':'BON.Flow-In.Inst.~6Hours.0.MODEL-STP-FCST'},\
+                     'Qtotal_fcst_RFC':{'file':'BON.Flow-In.Inst.~6Hours.0.RFC-FCST'},\
                      'Qspill':{'file':'BON.Flow-Spill.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qpower':{'file':'BON.Flow-Gen.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qspill_cap':{'file':'BON.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB'},\
@@ -246,6 +268,7 @@ SiteInfo['BON'] = {'Qtotal':{'file':'BON.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'TDG_ds_TW_12hr_c':{'file':'CCIW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\
 #                     'TDG_ds_FB_12hr_c':{'file':'CWMW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV'},\                     
                      'Pres_Air_ds_TW':{'file':'CCIW.Pres-Air.Inst.1Hour.0.GOES-REV'},\
+                     'Pres_Air_ds_TW_fcst':{'file':'BNDW.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST', 'adjust':51.39936806},\
                      'Temp_us_FB':{'file':'BON.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_TW':{'file':'TDDO.Temp-Water.Inst.1Hour.0.GOES-REV'},\
                      'Temp_ds_FB':{'file':'CWMW.Temp-Water.Inst.1Hour.0.GOES-REV'},\
@@ -275,7 +298,8 @@ SiteInfo['GCL'] = {'Qtotal':{'file':'GCL.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
 
 plot_info = {'Qspill_percent':{'color':'black','style':'--', 'bokeh_style':'dotted', 'label':'spill (%)', 'lw':1},\
                'Qtotal':{'color':'red', 'style':'-', 'bokeh_style':'solid', 'label':'Total', 'lw':1},\
-               'Qtotal_fcst':{'color':'red', 'style':':', 'bokeh_style':'dotted', 'label':'Total, forecast', 'lw':1},\
+               'Qtotal_fcst':{'color':'red', 'style':':', 'bokeh_style':'dashed', 'label':'Total, STP forecast', 'lw':1},\
+               'Qtotal_fcst_RFC':{'color':'red', 'style':':', 'bokeh_style':'dotted', 'label':'Total, RFC forecast', 'lw':1},\
                'Qpower':{'color':'blue', 'style':'-', 'bokeh_style':'solid', 'label':'Powerhouse', 'lw':1},\
               'Qspill':{'color':'black', 'style':'-', 'bokeh_style':'solid', 'label':'Spill', 'lw':1},\
               'Qspill_cap':{'color':'black', 'style':':', 'bokeh_style':'dashed', 'label':'Spill Cap', 'lw':1},\
@@ -296,6 +320,7 @@ plot_info = {'Qspill_percent':{'color':'black','style':'--', 'bokeh_style':'dott
               'Wind_obs':{'color':'purple', 'style':'-', 'bokeh_style':'solid','label':'Wind Speed, measured', 'lw':1},\
               'Wind_fcst':{'color':'purple', 'style':':', 'bokeh_style':'dotted','label':'Wind Speed, forecast', 'lw':1},\
               'Pres_Air_ds_TW':{'color':'purple', 'style':'-', 'bokeh_style':'solid','label':'Barometric Pressure', 'lw':1},\
+              'Pres_Air_ds_TW_fcst':{'color':'purple', 'style':'-', 'bokeh_style':'dotted','label':'Barometric Pressure, forecast', 'lw':1},\
             }
 line_width=2
 
@@ -305,7 +330,7 @@ for site in projects:
     plt_name = project + '_spill_TDG_TS'
     #Information needed to build a url for the web service
     #Things like data range and units are embedded and format (i.e. csv)
-#    base_url1 = 'http://nwp-wmlocal2.nwp.usace.army.mil/common/web_service/webexec/csv?id='
+    base_url1_local = 'http://nwp-wmlocal2.nwp.usace.army.mil/common/web_service/webexec/csv?id='
     base_url1 = 'http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id='
     data_dict = {}
     gage_dict = {}
@@ -314,6 +339,7 @@ for site in projects:
         gage = SiteInfo[project][flow_site]['file']
         units = ':units=kcfs'
         url = '%s%s%s&startdate=%s&enddate=%s&timezone=MST&headers=true' % (base_url1, gage, units, start, end)
+        print(url)
         site_data = get_data(url).decode()
         # gage_dict[gage][dt] = meas
         gage_dict[flow_site] = format_USACE_to_dictionary(site_data)
@@ -323,6 +349,7 @@ for site in projects:
         gage = SiteInfo[project][TDG_site]['file']
         units = ''
         url = '%s%s%s&startdate=%s&enddate=%s&timezone=MST&headers=true' % (base_url1, gage, units, start, end)
+        print(url)
         site_data = get_data(url).decode()
         gage_dict[TDG_site] = format_USACE_to_dictionary(site_data)
 
@@ -331,6 +358,7 @@ for site in projects:
         gage = SiteInfo[project][TDG_site]['file']
         units = ''
         url = '%s%s%s&startdate=%s&enddate=%s&timezone=MST&headers=true' % (base_url1, gage, units, start, end)
+        print(url)
         site_data = get_data(url).decode()
         dict_aaa = format_USACE_to_dictionary(site_data)
         dict_bbb = {}
@@ -346,16 +374,15 @@ for site in projects:
         gage = SiteInfo[project][Temp_site]['file']
         units = ''
         url = '%s%s%s&startdate=%s&enddate=%s&timezone=MST&headers=true' % (base_url1, gage, units, start, end)
+        print(url)
         site_data = get_data(url).decode()
         gage_dict[Temp_site] = format_USACE_to_dictionary(site_data)
     for Fcst_site in ['Wind_fcst', 'Temp_air_fcst']:
         if Fcst_site not in SiteInfo[project]: continue
         gage = SiteInfo[project][Fcst_site]['file']
         units = ''
-        now2 = datetime.now() + timedelta(-2)
-        start2 = now2.strftime("%m/%d/%Y")
-        end2 = (now + timedelta(forecast_days)).strftime("%m/%d/%Y")
-        url = '%s%s%s&startdate=%s&enddate=%s&timezone=MST&headers=true' % (base_url1, gage, units, start2, end2)
+        url = '%s%s%s&startdate=%s&enddate=%s&timezone=MST&headers=true' % (base_url1, gage, units, start, end2)
+        print(url)
         site_data = get_data(url).decode()
         #Need a plus 7 hour time adjustment on these forecasts
 #        temp_dict = format_USACE_to_dictionary(site_data)
@@ -369,12 +396,33 @@ for site in projects:
         if Fcst_site not in SiteInfo[project]: continue
         gage = SiteInfo[project][Fcst_site]['file']
         units = ''
-        now2 = datetime.now() + timedelta(-1)
-        start2 = now2.strftime("%m/%d/%Y")
-        end2 = (now + timedelta(forecast_days)).strftime("%m/%d/%Y")
         url = '%s%s%s&startdate=%s&enddate=%s&timezone=MST&headers=true' % (base_url1, gage, units, start2, end2)
+        print(url)
         site_data = get_data(url).decode()
         gage_dict[Fcst_site] = format_USACE_to_dictionary(site_data)
+    for Fcst_site in ['Qtotal_fcst_RFC']:
+        if Fcst_site not in SiteInfo[project]: continue
+        gage = SiteInfo[project][Fcst_site]['file']
+        units = ''
+        url = '%s%s%s&startdate=%s&enddate=%s&timezone=MST&headers=true' % (base_url1, gage, units, start2, end2)
+        print(url)
+        site_data = get_data(url).decode()
+        gage_dict[Fcst_site] = format_USACE_to_dictionary(site_data)
+
+
+    for Fcst_site in ['Pres_Air_ds_TW_fcst']:
+        if Fcst_site not in SiteInfo[project]: continue
+        gage = SiteInfo[project][Fcst_site]['file']
+        units = ''
+        url = '%s%s%s&startdate=%s&enddate=%s&timezone=MST&headers=true' % (base_url1, gage, units, start, end2)
+        print(url)
+        site_data = get_data(url).decode()
+        pres_air = format_USACE_to_dictionary(site_data)
+        pres_air_adj = {}
+        for dt, pres in pres_air.items():
+            pres_air_adj[dt] = pres + SiteInfo[project][Fcst_site]['adjust']
+        gage_dict[Fcst_site] = pres_air_adj
+
     
     
     #Calculate percent spill
@@ -427,7 +475,7 @@ for site in projects:
     
     myLegendList = []
     
-    for gage in ['Qspill', 'Qspill_cap', 'Qtotal', 'Qpower', 'Qtotal_fcst']:
+    for gage in ['Qspill', 'Qspill_cap', 'Qtotal', 'Qpower', 'Qtotal_fcst_RFC', 'Qtotal_fcst']:
         if gage not in gage_lists: continue
         label_sting = plot_info[gage]['label']
         source = ColumnDataSource(data={
@@ -526,7 +574,7 @@ for site in projects:
     s4.xgrid.grid_line_color = 'white'
     s4.ygrid.grid_line_color = 'white'
     
-    for gage in ['Temp_us_FB', 'Temp_ds_TW', 'Temp_ds_FB', 'Temp_air_obs', 'Temp_air_fcst']:
+    for gage in ['Temp_us_FB', 'Temp_ds_TW', 'Temp_ds_FB']:
         if gage not in gage_lists: continue
         if gage in SiteInfo[project]:
             label_sting = SiteInfo[project][gage]['file'].split('.')[0] + ' '  + plot_info[gage]['label']
@@ -548,6 +596,38 @@ for site in projects:
     s4.add_layout(legend, 'above')
     s4.legend.orientation = "horizontal"
 
+    #Air tempeature plot
+    dates = gage_lists['Qtotal']["dates_bokeh_TZbug"]
+    dates2 = gage_lists['Qtotal']["dates_bokeh_TZbug"]
+    myLegendList = []
+    s7 = figure(plot_width=900, plot_height=400, x_range=s1.x_range, title=title1,  x_axis_type='datetime',
+                x_axis_label=str(start_dt.year), y_axis_label='Wind Speed (mph)', tools=TOOLS)
+    s7.xgrid.grid_line_color = 'white'
+    s7.ygrid.grid_line_color = 'white'
+    
+    for gage in ['Temp_air_obs', 'Temp_air_fcst']:
+        if gage not in gage_lists: continue
+        if gage in SiteInfo[project]:
+            label_sting = SiteInfo[project][gage]['file'].split('.')[0] + ' '  + plot_info[gage]['label']
+        else:
+            label_sting = plot_info[gage]['label']
+        source = ColumnDataSource(data={
+                    'dateX': gage_lists[gage]["dates_bokeh_TZbug"], # python datetime object as X axis
+                    'v': gage_lists[gage]["meas"],
+                    'site': [label_sting] * len(gage_lists[gage]["dates"]),
+                    'dateX_str': [datetime.strftime(dt, '%m/%d %H:%M') for dt in gage_lists[gage]["dates"]], #string of datetime for display in tooltip
+                })
+        l = s7.line('dateX', 'v',source=source,color = plot_info[gage]['color'], alpha = 1.0, line_dash = plot_info[gage]['bokeh_style'], line_width = plot_info[gage]['lw'])
+        myLegendList.append((label_sting,[l]))
+        circle = s7.circle('dateX', 'v',source=source, size=6, color = plot_info[gage]['color'], alpha = 0.0)
+    hover = s7.select(dict(type=HoverTool))
+    hover.tooltips = [("site", "@site"), ("date", "@dateX_str"), ("value", "@v")]
+    hover.mode = 'mouse'
+    legend = Legend(items = myLegendList, location = (40,0))
+    s7.add_layout(legend, 'above')
+    s7.legend.orientation = "horizontal"
+
+
     #barometric plot
     dates = gage_lists['Qtotal']["dates_bokeh_TZbug"]
     dates2 = gage_lists['Qtotal']["dates_bokeh_TZbug"]
@@ -557,7 +637,7 @@ for site in projects:
     s5.xgrid.grid_line_color = 'white'
     s5.ygrid.grid_line_color = 'white'
     
-    for gage in ['Pres_Air_ds_TW']:
+    for gage in ['Pres_Air_ds_TW','Pres_Air_ds_TW_fcst']:
         if gage not in gage_lists: continue
         if gage in SiteInfo[project]:
             label_sting = SiteInfo[project][gage]['file'].split('.')[0] + ' '  + plot_info[gage]['label']
@@ -616,7 +696,7 @@ for site in projects:
     s6.legend.orientation = "horizontal"
 
 
-    p = column(s1, s2, s5, s3, s4, s6)
+    p = column(s1, s2, s5, s3, s7, s4, s6)
     
     # show the results
 #    show(p)
