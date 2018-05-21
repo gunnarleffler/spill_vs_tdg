@@ -1,106 +1,333 @@
 nwdp wq_tools wq_tools.sh is not configured to run on this node
+Start project operations and downstream TDG
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LWG.Flow-Out.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LWG.Flow-Spill.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LWG.Flow-Gen.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LWG.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LWG.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGNW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGSA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGNW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGSA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LWG.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGNW.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGSA.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=SILW.Speed-Wind.Inst.1Hour.0.USBR-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGNW.Pres-Air.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=SILW.Temp-Air.Inst.1Hour.0.USBR-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=SILW.Speed-Wind.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=SILW.Temp-Air.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LWG.Flow-Out.Inst.~6Hours.0.MODEL-STP-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LWG.Flow-In.Inst.~6Hours.0.RFC-WFO-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=SILW.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGS.Flow-Out.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGS.Flow-Spill.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGS.Flow-Gen.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGS.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGSA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGSW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMNA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGSW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMNA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGSA.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGSW.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMNA.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LBRW.Speed-Wind.Inst.1Hour.0.USBR-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGSW.Pres-Air.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LBRW.Temp-Air.Inst.1Hour.0.USBR-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LBRW.Speed-Wind.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LBRW.Temp-Air.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGS.Flow-Out.Inst.~6Hours.0.MODEL-STP-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LGS.Flow-In.Inst.~6Hours.0.RFC-WFO-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LBRW.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMN.Flow-Out.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMN.Flow-Spill.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMN.Flow-Gen.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMN.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMNA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMNW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IHRA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMNW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IHRA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMNA.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMNW.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IHRA.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=PSCW.Speed-Wind.Inst.1Hour.0.METAR-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMNW.Pres-Air.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=PSCW.Temp-Air.Inst.1Hour.0.METAR-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=PSCW.Speed-Wind.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=PSCW.Temp-Air.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMN.Flow-Out.Inst.~6Hours.0.MODEL-STP-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=LMN.Flow-In.Inst.~6Hours.0.RFC-WFO-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=PSCW.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IHR.Flow-Out.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IHR.Flow-Spill.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IHR.Flow-Gen.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IHR.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IHRA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IDSW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCNA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IDSW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCNA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IHRA.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IDSW.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCNA.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=PSCW.Speed-Wind.Inst.1Hour.0.METAR-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IDSW.Pres-Air.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=PSCW.Temp-Air.Inst.1Hour.0.METAR-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=PSCW.Speed-Wind.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=PSCW.Temp-Air.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IHR.Flow-Out.Inst.~6Hours.0.MODEL-STP-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=IHR.Flow-In.Inst.~6Hours.0.RFC-WFO-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=PSCW.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCN.Flow-Out.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCN.Flow-Spill.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCN.Flow-Gen.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCN.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCNA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCPW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JDY.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCPW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JDY.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCNA.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCPW.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JDY.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=HERO.Speed-Wind.Ave.1Hour.0.USBR-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCPW.Pres-Air.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=HERO.Temp-Air.Inst.0.0.MIXED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=HERO.Speed-Wind.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=HERO.Temp-Air.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCN.Flow-Out.Inst.~6Hours.0.MODEL-STP-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=MCN.Flow-In.Inst.~6Hours.0.RFC-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=HERO.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JDA.Flow-Out.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JDA.Flow-Spill.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JDA.Flow-Gen.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JDA.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JDY.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JHAW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JHAW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JDY.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JHAW.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDA.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=DLS.Speed-Wind.Inst.1Hour.0.METAR-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JHAW.Pres-Air.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=DLS.Temp-Air.Inst.1Hour.0.METAR-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=DLS.Speed-Wind.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=DLS.Temp-Air.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JDA.Flow-In.Inst.~6Hours.0.RFC-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=JDA.Flow-In.Inst.~6Hours.0.RFC-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=DLS.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDA.Flow-Out.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDA.Flow-Spill.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDA.Flow-Gen.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDA.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDDO.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BON.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDDO.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BON.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDA.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDDO.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDDO.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=DLS.Speed-Wind.Inst.1Hour.0.METAR-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDDO.Pres-Air.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=DLS.Temp-Air.Inst.1Hour.0.METAR-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=DLS.Speed-Wind.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=DLS.Temp-Air.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDA.Flow-In.Inst.~6Hours.0.RFC-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDA.Flow-In.Inst.~6Hours.0.RFC-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=DLS.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BON.Flow-Out.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BON.Flow-Spill.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BON.Flow-Gen.Ave.1Hour.1Hour.CBT-REV:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BON.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB:units=kcfs&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BON.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=CCIW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=CCIW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BON.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=TDDO.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=CWMW.Temp-Water.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BNDW.Speed-Wind.Inst.1Hour.0.USBR-COMPUTED-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=CCIW.Pres-Air.Inst.1Hour.0.GOES-REV&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BNDW.Temp-Air.Inst.15Minutes.0.USBR-RAW&startdate=04/01/2018&enddate=05/22/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BNDW.Speed-Wind.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BNDW.Temp-Air.Inst.~3Hours.0.NOAA-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BON.Flow-In.Inst.~6Hours.0.MODEL-STP-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BON.Flow-In.Inst.~6Hours.0.RFC-FCST&startdate=05/20/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
+http://www.nwd-wc.usace.army.mil/dd/common/web_service/webexec/csv?id=BNDW.Pres-Air.Inst.~3Hours.0.OPEN-WEATHER-FCST&startdate=04/01/2018&enddate=06/02/2018&timezone=MST&headers=true
+-1000000.0 1000000.0
 /usr/local/lib/python3.5/dist-packages/statsmodels/compat/pandas.py:56: FutureWarning: The pandas.core.datetools module is deprecated and will be removed in a future version. Please use the pandas.tseries module instead.
   from pandas.core import datetools
-/usr/lib/python3/dist-packages/numpy/core/_methods.py:59: RuntimeWarning: Mean of empty slice.
-  warnings.warn("Mean of empty slice.", RuntimeWarning)
-/usr/lib/python3/dist-packages/numpy/core/_methods.py:70: RuntimeWarning: invalid value encountered in double_scalars
-  ret = ret.dtype.type(ret / rcount)
-110 <120
-115 <120
-116 <120
-117 <120
-118 <120
-119 <120
-120 124
-122 >130
-125 >130
-127 >130
-130 >130
-135 >130
-110 <98
-115 <98
-116 <98
-117 <98
-118 107
-119 123
-120 >124
-122 >124
-125 >124
-127 >124
-130 >124
-135 >124
-110 <131
-115 <131
-116 <131
-117 <131
-118 <131
-119 >146
-120 >146
-122 >146
-125 >146
-127 >146
-130 >146
-135 >146
-110 <132
-115 <132
-116 <132
-117 190
-118 190
-119 194
-120 >198
-122 >198
-125 >198
-127 >198
-130 >198
-135 >198
-110 <92
-115 <92
-116 <92
-117 <92
-118 <92
-119 <92
-120 94
-122 >96
-125 >96
-127 >96
-130 >96
-135 >96
-110 <32
-115 <32
-116 <32
-117 <32
-118 42
-119 >44
-120 >44
-122 >44
-125 >44
-127 >44
-130 >44
-135 >44
-110 <29
-115 32
-116 34
-117 >36
-118 >36
-119 >36
-120 >36
-122 >36
-125 >36
-127 >36
-130 >36
-135 >36
-110 <45
-115 <45
-116 <45
-117 <45
-118 45
-119 >49
-120 >49
-122 >49
-125 >49
-127 >49
-130 >49
-135 >49
+!No data for CCIW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
+Traceback (most recent call last):
+  File "Spill_v_TDG_daily_py36_v1.py", line 237, in <module>
+    df1 = pd.merge(aaa, bbb, left_index=True, right_index=True)
+  File "/usr/local/lib/python3.5/dist-packages/pandas/core/reshape/merge.py", line 57, in merge
+    validate=validate)
+  File "/usr/local/lib/python3.5/dist-packages/pandas/core/reshape/merge.py", line 541, in __init__
+    'type {right}'.format(right=type(right)))
+ValueError: can not merge DataFrame with instance of type <class 'bool'>
+!No data for CCIW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
 ./get_avgs.py:123: FutureWarning: 
 Passing list-likes to .loc or [] with any missing label will raise
 KeyError in the future, you can use .reindex() as an alternative.
@@ -110,7 +337,201 @@ http://pandas.pydata.org/pandas-docs/stable/indexing.html#deprecate-loc-reindex-
   loc[roll_mean.groupby(pd.Grouper(level='date', freq='D')).idxmax()] \
 [NbConvertApp] Converting notebook ./columbia.ipynb to html
 [NbConvertApp] Executing notebook with kernel: python3
-[NbConvertApp] Writing 352263 bytes to ./columbia.html
+[NbConvertApp] Writing 424255 bytes to ./columbia.html
 [NbConvertApp] Converting notebook ./snake_river.ipynb to html
 [NbConvertApp] Executing notebook with kernel: python3
-[NbConvertApp] Writing 352308 bytes to ./snake_river.html
+[NbConvertApp] Writing 432504 bytes to ./snake_river.html
+
+Collecting LWG.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
+
+Collecting LGNW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
+
+Collecting LGSA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
+
+Collecting LGNW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV
+
+Collecting LGSA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV
+
+Collecting LWG.Flow-Out.Ave.1Hour.1Hour.CBT-REV
+
+Collecting LWG.Flow-Out.Inst.~6Hours.0.MODEL-STP-FCST
+
+Collecting LWG.Flow-Spill.Ave.1Hour.1Hour.CBT-REV
+
+Collecting LWG.Flow-Gen.Ave.1Hour.1Hour.CBT-REV
+
+Collecting LWG.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB
+
+Collecting LGNW.Pres-Air.Inst.1Hour.0.GOES-REV
+
+Collecting LWG.Temp-Water.Inst.1Hour.0.GOES-REV
+
+Collecting LGNW.Temp-Water.Inst.1Hour.0.GOES-REV
+
+Collecting LGSA.Temp-Water.Inst.1Hour.0.GOES-REV
+
+Collecting SILW.Speed-Wind.Inst.1Hour.0.USBR-COMPUTED-REV
+
+Collecting SILW.Speed-Wind.Inst.~3Hours.0.NOAA-FCST
+
+Collecting SILW.Temp-Air.Inst.1Hour.0.USBR-COMPUTED-REV
+
+Collecting SILW.Temp-Air.Inst.~3Hours.0.NOAA-FCST
+
+Collecting LGSA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
+
+Collecting LGSW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
+
+Collecting LMNA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
+
+Collecting LGSW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV
+
+Collecting LMNA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV
+
+Collecting LGS.Flow-Out.Ave.1Hour.1Hour.CBT-REV
+
+Collecting LGS.Flow-Out.Inst.~6Hours.0.MODEL-STP-FCST
+
+Collecting LGS.Flow-Spill.Ave.1Hour.1Hour.CBT-REV
+
+Collecting LGS.Flow-Gen.Ave.1Hour.1Hour.CBT-REV
+
+Collecting LGS.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB
+
+Collecting LGSW.Pres-Air.Inst.1Hour.0.GOES-REV
+
+Collecting LGSA.Temp-Water.Inst.1Hour.0.GOES-REV
+
+Collecting LGSW.Temp-Water.Inst.1Hour.0.GOES-REV
+
+Collecting LMNA.Temp-Water.Inst.1Hour.0.GOES-REV
+
+Collecting LBRW.Speed-Wind.Inst.1Hour.0.USBR-COMPUTED-REV
+
+Collecting LBRW.Speed-Wind.Inst.~3Hours.0.NOAA-FCST
+
+Collecting LBRW.Temp-Air.Inst.1Hour.0.USBR-COMPUTED-REV
+
+Collecting LBRW.Temp-Air.Inst.~3Hours.0.NOAA-FCST
+
+Collecting LMNA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
+
+Collecting LMNW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
+
+Collecting IHRA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
+
+Collecting LMNW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV
+
+Collecting IHRA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV
+
+Collecting LMN.Flow-Out.Ave.1Hour.1Hour.CBT-REV
+
+Collecting LMN.Flow-Out.Inst.~6Hours.0.MODEL-STP-FCST
+
+Collecting LMN.Flow-Spill.Ave.1Hour.1Hour.CBT-REV
+
+Collecting LMN.Flow-Gen.Ave.1Hour.1Hour.CBT-REV
+
+Collecting LMN.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB
+
+Collecting LMNW.Pres-Air.Inst.1Hour.0.GOES-REV
+
+Collecting LMNA.Temp-Water.Inst.1Hour.0.GOES-REV
+
+Collecting LMNW.Temp-Water.Inst.1Hour.0.GOES-REV
+
+Collecting IHRA.Temp-Water.Inst.1Hour.0.GOES-REV
+
+Collecting PSCW.Speed-Wind.Inst.1Hour.0.METAR-COMPUTED-REV
+
+Collecting PSCW.Speed-Wind.Inst.~3Hours.0.NOAA-FCST
+
+Collecting PSCW.Temp-Air.Inst.1Hour.0.METAR-COMPUTED-REV
+
+Collecting PSCW.Temp-Air.Inst.~3Hours.0.NOAA-FCST
+
+Collecting IHRA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
+
+Collecting IDSW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
+
+Collecting MCNA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV
+
+Collecting IDSW.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV
+
+Collecting MCNA.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-Combined-REV
+
+Collecting IHR.Flow-Out.Ave.1Hour.1Hour.CBT-REV
+
+Collecting IHR.Flow-Out.Inst.~6Hours.0.MODEL-STP-FCST
+
+Collecting IHR.Flow-Spill.Ave.1Hour.1Hour.CBT-REV
+
+Collecting IHR.Flow-Gen.Ave.1Hour.1Hour.CBT-REV
+
+Collecting IHR.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB
+
+Collecting IDSW.Pres-Air.Inst.1Hour.0.GOES-REV
+
+Collecting IHRA.Temp-Water.Inst.1Hour.0.GOES-REV
+
+Collecting IDSW.Temp-Water.Inst.1Hour.0.GOES-REV
+
+Collecting MCNA.Temp-Water.Inst.1Hour.0.GOES-REV
+
+Collecting PSCW.Speed-Wind.Inst.1Hour.0.METAR-COMPUTED-REV
+
+Collecting PSCW.Speed-Wind.Inst.~3Hours.0.NOAA-FCST
+
+Collecting PSCW.Temp-Air.Inst.1Hour.0.METAR-COMPUTED-REV
+
+Collecting PSCW.Temp-Air.Inst.~3Hours.0.NOAA-FCST
+
+Creating tdg plots.
+
+Creating flow plots.
+
+Creating air pressure plots.
+
+Creating temp plots.
+
+Creating wind plots.
+
+Creating air temp plots.
+
+Creating tdg plots.
+
+Creating flow plots.
+
+Creating air pressure plots.
+
+Creating temp plots.
+
+Creating wind plots.
+
+Creating air temp plots.
+
+Creating tdg plots.
+
+Creating flow plots.
+
+Creating air pressure plots.
+
+Creating temp plots.
+
+Creating wind plots.
+
+Creating air temp plots.
+
+Creating tdg plots.
+
+Creating flow plots.
+
+Creating air pressure plots.
+
+Creating temp plots.
+
+Creating wind plots.
+
+Creating air temp plots.
+
+Saving html document

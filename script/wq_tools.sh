@@ -65,4 +65,8 @@ cd $SCRIPT_DIR/12hr
 jupyter nbconvert --to html --execute ./columbia.ipynb
 jupyter nbconvert --to html --execute ./snake_river.ipynb
 
-
+###########################################################
+#create wq plot dashboard
+##########################################################
+cd $SCRIPT_DIR/wq_plots
+python3 ./main.py snake.yml -t Snake_River
