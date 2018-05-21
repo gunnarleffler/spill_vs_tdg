@@ -17,12 +17,12 @@ import statsmodels.api as sm
 import numpy as np
 
 #network paths
-#outdir_V = outdir =  os.getcwd() + '/../data/'
-#indir = os.getcwd() + "/../config/"
+outdir_V = outdir =  os.getcwd() + '/../data/'
+indir = os.getcwd() + "/../config/"
 
 #Dan's paths for testing
-outdir_V = outdir =  os.getcwd()  + '\\'
-indir = r'C:\spill_eval_local\config\\'
+#outdir_V = outdir =  os.getcwd()  + '\\'
+#indir = r'C:\spill_eval_local\config\\'
 
 file_out_base = 'daily_spill_v_tdg_2'
 
