@@ -17,22 +17,18 @@ import statsmodels.api as sm
 import numpy as np
 
 #network paths
-outdir_V = outdir =  os.getcwd() + '/../data/'
-indir = os.getcwd() + "/../config/"
+#outdir_V = outdir =  os.getcwd() + '/../data/'
+#indir = os.getcwd() + "/../config/"
 
 #Dan's paths for testing
-#outdir_V = outdir =  os.getcwd() 
-#indir = r'F:\python_local\spill_vs_tdg\config\\'
+outdir_V = outdir =  os.getcwd()  + '\\'
+indir = r'C:\spill_eval_local\config\\'
 
 file_out_base = 'daily_spill_v_tdg_2'
 
-#projects = ['BON_WRNO', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_DG', 'CHJ']
-projects = ['BON', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN_uniform', 'LGS', 'LWG', 'GCL_OT', 'CHJ']
-#projects = [ 'BON_WRNO']
-
+projects = ['BON', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN', 'LGS', 'LWG', 'GCL', 'CHJ']
 
 now = datetime.now()
-#now = datetime(2017,6,15)
 then = now - timedelta(7)
 
 end_dt = now + timedelta(1)
@@ -45,24 +41,7 @@ start36hr = (then36hr.year, then36hr.month, then36hr.day)
 x_value = 'Qspill'
 y_value = 'TDG_ds_TW'
 TDG_goals = [110, 115, 116, 117, 118, 119, 120, 122, 125, 127, 130, 135]
-
-surrogate_GC = {
-        'LWG':118.1,
-        'LGS':115.5,
-        'LMN_bulk':118.1,
-        'LMN_uniform':118.1,
-        'IHR':118.9,
-        'MCN':119.9,
-        'JDA':118,
-        'TDA':118,
-        'BON':119.9,
-        'BON_WRNO':119.9,
-        'GCL_DG':117.2,
-        'GCL_OT':117.2,
-        'CHJ':119.9,
-        'CHJ_WSBW':118,
-        }
-
+#TDG_goals = [122, 123,124, 125,126, 127,128,129, 130,131,132,133,134, 135]
 
 outlets = {}
 outlets['BON'] = {
@@ -158,19 +137,7 @@ outlets['LWG'] = {
 'z3_tw_TDG':      {'CWMS':'LGNW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV', 'units':'%'},
 'z4_ds_fb_TDG':      {'CWMS':'LGSA.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV', 'units':'%'},
 }
-outlets['GCL_DG'] = {
-'e_tw':            {'CWMS':'GCL.Elev-Tailwater.Inst.1Hour.0.CBT-REV', 'units':'ft'},
-'e_fb':            {'CWMS':'GCL.Elev-Forebay.Inst.1Hour.0.CBT-REV', 'units':'ft'},
-'q_powerhouse':    {'CWMS':'GCL.Flow-Gen.Ave.1Hour.1Hour.CBT-REV', 'units':'kcfs'},
-'q_spillbay_fake': {'CWMS':'GCL.Flow-Spill.Ave.1Hour.1Hour.CBT-REV',  'units':'kcfs'},
-'q_spilltotal':    {'CWMS':'GCL.Flow-Spill.Ave.1Hour.1Hour.CBT-REV', 'units':'kcfs'},
-'q_totalflow':     {'CWMS':'GCL.Flow-Out.Ave.1Hour.1Hour.CBT-REV', 'units':'kcfs'},
-'z0_fb_TDG':       {'CWMS':'FDRW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV', 'units':'%'},
-'z1_Pres_Air':     {'CWMS':'CHQW.Pres-Air.Inst.1Hour.0.NWSRADIO-REV', 'units':'mm-hg'},
-'z3_tw_TDG':       {'CWMS':'GCGW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV', 'units':'%'},
-'z4_ds_fb_TDG':    {'CWMS':'CHQW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV', 'units':'%'},
-}
-outlets['GCL_OT'] = {
+outlets['GCL'] = {
 'e_tw':            {'CWMS':'GCL.Elev-Tailwater.Inst.1Hour.0.CBT-REV', 'units':'ft'},
 'e_fb':            {'CWMS':'GCL.Elev-Forebay.Inst.1Hour.0.CBT-REV', 'units':'ft'},
 'q_powerhouse':    {'CWMS':'GCL.Flow-Gen.Ave.1Hour.1Hour.CBT-REV', 'units':'kcfs'},
@@ -219,7 +186,7 @@ outlets['CHJ_WSBW'] = {
 'z4_ds_fb_TDG':    {'CWMS':'WEL.%-Saturation-TDG.Inst.1Hour.0.CBT-COMPUTED-RAW', 'units':'%'},
 }
 
-
+matplotlib.rcParams.update({'font.size': 6})
 for project in projects:
 #    TDG_goals += [surrogate_GC[project]]
     TDG_goals.sort()
@@ -229,35 +196,33 @@ for project in projects:
     else:
         paths = [outlets[project]['q_spilltotal']['CWMS'], outlets[project]['z3_tw_TDG']['CWMS']]
 
-#    if 'GCL' in project:
-#        paths += [outlets[project]['e_fb']['CWMS']]
-
+    print(paths[0],'\n',paths[1])
     aaa = get_cwms([paths[0]], public = True, interval = 'hourly', start_date = start, end_date = end, timezone = 'PST')
     bbb = get_cwms([paths[1]], public = True, interval = 'hourly', start_date = start, end_date = end, timezone = 'PST')
-    df1 = pd.merge(aaa, bbb, left_index=True, right_index=True)
     ccc = get_cwms([paths[0]], public = True, interval = 'hourly', start_date = start36hr, end_date = end, timezone = 'PST')
     ddd = get_cwms([paths[1]], public = True, interval = 'hourly', start_date = start36hr, end_date = end, timezone = 'PST')
-    df36hr = pd.merge(ccc, ddd, left_index=True, right_index=True)
 
+
+    try:
+        if bbb == False:
+            bbb = pd.DataFrame(index=aaa.index, columns = ['test'])
+    except ValueError:
+        pass
+    try:
+        if ddd == False:
+            ddd = pd.DataFrame(index=ccc.index, columns = ['test'])
+    except ValueError:
+        pass  
+    df1 = pd.merge(aaa, bbb, left_index=True, right_index=True)          
+    df36hr = pd.merge(ccc, ddd, left_index=True, right_index=True)
     df1 = df1[df1>0].dropna()
     df1 = df1[(df1.iloc[:,1]<200)]
     df36hr = df36hr[df36hr>0].dropna()
     df36hr = df36hr[(df36hr.iloc[:,1]<200)]
 
-
-
-    #bulk_uni_threshold = 32
-    #if 'bulk' in project:
-    #    df1 = df1[(df1['LMN_Flow_Spill']<=bulk_uni_threshold)]
-    #if 'uniform' in project:
-    #    df1 = df1[(df1['LMN_Flow_Spill']>bulk_uni_threshold)]
-
-#    if project == 'GCL_DG':
-#        df1 = df1[(df1['GCL_Elev_Forebay']>=1266)]
-#    if project == 'GCL_OT':
-#        df1 = df1[(df1['GCL_Elev_Forebay']<1266)]
-
     fig, ax = plt.subplots(figsize=(6, 4))
+    
+    title1 = project
     dt_string = '{d.month}/{d.day}'.format(d=then)  + '-' + '{d.month}/{d.day}'.format(d=now)
     ax.plot(df1.iloc[:,0], df1.iloc[:,1], label = dt_string, linestyle='None', marker='o', color = 'k', alpha =0.5, markersize=5)
     dt_string = '{d.month}/{d.day}'.format(d=then36hr)  + '-' + '{d.month}/{d.day}'.format(d=now)
@@ -275,9 +240,20 @@ for project in projects:
     p = project
     if project == 'CHJ_WSBW':
         p = 'CHJ'
-    hist_sm = pd.read_csv(indir + p + '_smoothed_P.csv')
-    ax.fill_between(hist_sm['Unnamed: 0'], hist_sm['0.95'], hist_sm['0.05'], alpha = 0.33, label = '5-95th P (2011-2017)')
-    ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'b', label = '50th P (2011-2017)')
+    if project != 'GCL':
+        hist_sm = pd.read_csv(indir + p + '_smoothed_P.csv')
+        ax.fill_between(hist_sm['Unnamed: 0'], hist_sm['0.95'], hist_sm['0.05'], alpha = 0.33, label = '5-95th P (2011-2017)')
+        ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'b', label = '50th P (2011-2017)')
+    else:
+        title1 += ': DG (blue) and OT (green), '
+        p1= 'GCL_OT'
+        hist_sm = pd.read_csv(indir + p1 + '_smoothed_P.csv')
+        ax.fill_between(hist_sm['Unnamed: 0'], hist_sm['0.95'], hist_sm['0.05'], color = 'b', alpha = 0.33, label = '5-95th P (2011-2017)')
+        ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'b', label = '50th P (2011-2017)')        
+        p1= 'GCL_DG'
+        hist_sm = pd.read_csv(indir + p1 + '_smoothed_P.csv')
+        ax.fill_between(hist_sm['Unnamed: 0'], hist_sm['0.95'], hist_sm['0.05'], color = 'green', alpha = 0.33, label = '5-95th P (2011-2017)')
+        ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'green', label = '50th P (2011-2017)')   
 #    if smooth_df.count().any()>0:
 #        if x_lims[0] > 0:
 #            x_lims = (0.0, x_lims[1])
@@ -310,7 +286,7 @@ for project in projects:
             spill_table += str(tdg_level) + '%   ' + spill_txt + '\n'
     plt.text(1.02,0.5, spill_table, transform = ax.transAxes, verticalalignment='center')
 
-    title1 = project
+    
 
     #if 'LMN' in project:
     #    if 'bulk' in project:
@@ -324,7 +300,7 @@ for project in projects:
     title1 += ' {d.month}/{d.day}/{d.year} {d.hour:02}{d.minute:02}'.format(d=now)
     plt.title(title1, y=1.2)
     plt.gcf().subplots_adjust(top=0.8,right=0.8)
-    matplotlib.rcParams.update({'font.size': 6})
+    
     filname = outdir + project + '_'  + file_out_base + '.png'
     plt.savefig(filname, dpi = 200)
     #os.startfile(filname)
