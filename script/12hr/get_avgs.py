@@ -31,7 +31,7 @@ from datetime import timedelta, datetime
 import numpy as np
 import math
 
-def loadConfig(path: str, verbose = True)->dict:
+def loadConfig(path, verbose = True):
   if verbose:
     sys.stderr.write("loading config file...")
   output = yaml.safe_load(open(path))
@@ -44,7 +44,7 @@ def set_time_index(ts_index, hour_int = 0, minute_int = 0, second_int = 0):
 
     
                 
-def oregon_method(series:pd.core.series.Series) -> pd.core.frame.DataFrame:
+def oregon_method(series):
     """
     Args:
         df: a pd.core.DataFrame of percent TDG saturation
@@ -87,7 +87,7 @@ def oregon_method(series:pd.core.series.Series) -> pd.core.frame.DataFrame:
 
 
 
-def washington_method(series:pd.core.series.Series) -> pd.core.frame.DataFrame:
+def washington_method(series):
     """
     Args:
         df: a pd.core.DataFrame of percent TDG saturation
@@ -139,7 +139,7 @@ def washington_method(series:pd.core.series.Series) -> pd.core.frame.DataFrame:
     return result 
     
 
-def combine(orgn:pd.core.series.Series, wa:pd.core.series.Series, start_date: tuple, end_date: tuple) -> pd.core.frame.DataFrame:
+def combine(orgn, wa, start_date, end_date):
     """
 
     Args:
@@ -208,7 +208,7 @@ def combine(orgn:pd.core.series.Series, wa:pd.core.series.Series, start_date: tu
     return result
 
 
-def pd_df_to_instapost(value_df:pd.core.frame.DataFrame, pathname:str, units:str)->dict:
+def pd_df_to_instapost(value_df, pathname, units):
     """
     Args:
         series: a pd.core.Series time series with a time stamp index 
