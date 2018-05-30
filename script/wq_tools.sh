@@ -70,3 +70,9 @@ jupyter nbconvert --to html --execute ./snake_river.ipynb
 ##########################################################
 cd $SCRIPT_DIR/wq_plots
 python3 ./main.py snake.yml -t Snake_River
+############################################################
+#Create cciw prediction table
+############################################################
+cd $SCRIPT_DIR/knn
+jupyter nbconvert --to html --execute ./daily_predict.ipynb
+
