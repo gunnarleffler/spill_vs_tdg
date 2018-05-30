@@ -26,13 +26,13 @@ indir = os.getcwd() + "/../config/"
 
 file_out_base = 'daily_spill_v_tdg_2'
 
-projects = ['BON', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN', 'LGS', 'LWG', 'GCL', 'CHJ']
+projects = ['BON', 'BON_WRNO','TDA', 'JDA', 'MCN', 'IHR', 'LMN', 'LGS', 'LWG', 'GCL', 'CHJ']
 
 now = datetime.now()
 then = now - timedelta(7)
 
 end_dt = now + timedelta(1)
-end = (end_dt.year, end_dt.month, end_dt.day+1)
+end = (end_dt.year, end_dt.month, end_dt.day)
 start = (then.year, then.month, then.day)
 
 then36hr = now - timedelta(1)
@@ -40,8 +40,8 @@ start36hr = (then36hr.year, then36hr.month, then36hr.day)
 
 x_value = 'Qspill'
 y_value = 'TDG_ds_TW'
-TDG_goals = [110, 115, 116, 117, 118, 119, 120, 122, 125, 127, 130, 135]
-#TDG_goals = [122, 123,124, 125,126, 127,128,129, 130,131,132,133,134, 135]
+#TDG_goals = [110, 115, 116, 117, 118, 119, 120, 122, 125, 127, 130, 135]
+TDG_goals = [110, 115, 116, 117, 118, 119, 120, 121, 122, 123,124, 125,126, 127,128,129, 130,131,132,133,134, 135]
 
 outlets = {}
 outlets['BON'] = {
@@ -286,8 +286,10 @@ for project in projects:
             spill_table += str(tdg_level) + '%   ' + spill_txt + '\n'
     plt.text(1.02,0.5, spill_table, transform = ax.transAxes, verticalalignment='center')
 
-    
-
+    gridlines = ax.get_xgridlines() + ax.get_ygridlines()    
+    for line in gridlines:
+        line.set_linestyle(':')
+    plt.grid()
     #if 'LMN' in project:
     #    if 'bulk' in project:
     #        title1 += '(assumed <= '+ str(bulk_uni_threshold) + 'kcfs spill)'
