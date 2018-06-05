@@ -48,4 +48,4 @@ fi
 ############################################################
 
 cd $SCRIPT_DIR/12hr
-./get_avgs.py -l 15000 config.yml -rj > ../../data/12hr.json
+python3 ./get_avgs.py -l 150 config.yml -rj > ../../data/12hr.json

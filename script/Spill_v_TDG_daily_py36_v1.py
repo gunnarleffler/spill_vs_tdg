@@ -11,8 +11,9 @@ from datetime import datetime, timedelta
 from cwms_read.cwms_read import get_cwms
 import pandas as pd
 import matplotlib
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
 import statsmodels.api as sm
 import numpy as np
 
@@ -26,13 +27,13 @@ indir = os.getcwd() + "/../config/"
 
 file_out_base = 'daily_spill_v_tdg_2'
 
-projects = ['BON', 'TDA', 'JDA', 'MCN', 'IHR', 'LMN', 'LGS', 'LWG', 'GCL', 'CHJ']
+projects = ['BON', 'BON_WRNO','TDA', 'JDA', 'MCN', 'IHR', 'LMN', 'LGS', 'LWG', 'GCL', 'CHJ']
 
 now = datetime.now()
 then = now - timedelta(7)
 
 end_dt = now + timedelta(1)
-end = (end_dt.year, end_dt.month, end_dt.day+1)
+end = (end_dt.year, end_dt.month, end_dt.day)
 start = (then.year, then.month, then.day)
 
 then36hr = now - timedelta(1)
@@ -40,8 +41,8 @@ start36hr = (then36hr.year, then36hr.month, then36hr.day)
 
 x_value = 'Qspill'
 y_value = 'TDG_ds_TW'
-TDG_goals = [110, 115, 116, 117, 118, 119, 120, 122, 125, 127, 130, 135]
-#TDG_goals = [122, 123,124, 125,126, 127,128,129, 130,131,132,133,134, 135]
+#TDG_goals = [110, 115, 116, 117, 118, 119, 120, 122, 125, 127, 130, 135]
+TDG_goals = [110, 115, 116, 117, 118, 119, 120, 121, 122, 123,124, 125,126, 127,128,129, 130,131,132,133,134, 135]
 
 outlets = {}
 outlets['BON'] = {
@@ -221,15 +222,16 @@ for project in projects:
     df36hr = df36hr[(df36hr.iloc[:,1]<200)]
 
     fig, ax = plt.subplots(figsize=(6, 4))
-    
+    legend_elements = []
     title1 = project
     dt_string = '{d.month}/{d.day}'.format(d=then)  + '-' + '{d.month}/{d.day}'.format(d=now)
-    ax.plot(df1.iloc[:,0], df1.iloc[:,1], label = dt_string, linestyle='None', marker='o', color = 'k', alpha =0.5, markersize=5)
-    dt_string = '{d.month}/{d.day}'.format(d=then36hr)  + '-' + '{d.month}/{d.day}'.format(d=now)
-    ax.plot(df36hr.iloc[:,0], df36hr.iloc[:,1], label = dt_string, linestyle='None', marker='o', color = 'r', alpha =0.66, markersize=5)
-    lowess = sm.nonparametric.lowess(df1.iloc[:,1].tolist(), df1.iloc[:,0].tolist(), frac=0.66)
-    ax.plot(lowess[:, 0], lowess[:, 1], label = '7d reg.', color = 'k')
-    smooth_df = pd.DataFrame(lowess)
+    if len(df1) > 0:
+        legend_elements += ax.plot(df1.iloc[:,0], df1.iloc[:,1], label = dt_string, linestyle='None', marker='o', color = 'k', alpha =0.5, markersize=5)
+        dt_string = '{d.month}/{d.day}'.format(d=then36hr)  + '-' + '{d.month}/{d.day}'.format(d=now)
+        legend_elements += ax.plot(df36hr.iloc[:,0], df36hr.iloc[:,1], label = dt_string, linestyle='None', marker='o', color = 'r', alpha =0.66, markersize=5)
+        lowess = sm.nonparametric.lowess(df1.iloc[:,1].tolist(), df1.iloc[:,0].tolist(), frac=0.66)
+        legend_elements += ax.plot(lowess[:, 0], lowess[:, 1], label = '7d reg.', color = 'k')
+        smooth_df = pd.DataFrame(lowess)
 
     if smooth_df.count().any()>0:
         x_lims = ax.get_xlim()
@@ -243,17 +245,19 @@ for project in projects:
     if project != 'GCL':
         hist_sm = pd.read_csv(indir + p + '_smoothed_P.csv')
         ax.fill_between(hist_sm['Unnamed: 0'], hist_sm['0.95'], hist_sm['0.05'], alpha = 0.33, label = '5-95th P (2011-2017)')
-        ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'b', label = '50th P (2011-2017)')
+        legend_elements += ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'b', label = '50th P (2011-2017)')
     else:
         title1 += ': DG (blue) and OT (green), '
         p1= 'GCL_OT'
         hist_sm = pd.read_csv(indir + p1 + '_smoothed_P.csv')
         ax.fill_between(hist_sm['Unnamed: 0'], hist_sm['0.95'], hist_sm['0.05'], color = 'b', alpha = 0.33, label = '5-95th P (2011-2017)')
-        ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'b', label = '50th P (2011-2017)')        
+        legend_elements += [Patch(facecolor='b', edgecolor='b', alpha = 0.33, label='5-95th P (2011-2017)')]
+        legend_elements += ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'b', label = '50th P (2011-2017)')        
         p1= 'GCL_DG'
         hist_sm = pd.read_csv(indir + p1 + '_smoothed_P.csv')
         ax.fill_between(hist_sm['Unnamed: 0'], hist_sm['0.95'], hist_sm['0.05'], color = 'green', alpha = 0.33, label = '5-95th P (2011-2017)')
-        ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'green', label = '50th P (2011-2017)')   
+        legend_elements += [Patch(facecolor='green', edgecolor='green', alpha = 0.33, label='5-95th P (2011-2017)')]
+        legend_elements += ax.plot(hist_sm['Unnamed: 0'], hist_sm['0.5'], color = 'green', label = '50th P (2011-2017)')   
 #    if smooth_df.count().any()>0:
 #        if x_lims[0] > 0:
 #            x_lims = (0.0, x_lims[1])
@@ -265,13 +269,14 @@ for project in projects:
     box = ax.get_position()
     ax.set_position([box.x0, box.y0, box.width * 0.9, box.height])
 
-    spill_table = 'Most recent:\n{d.month}/{d.day}/{d.year} {d.hour:02}{d.minute:02}\n'.format(d=df1.index.max())
+    
     if smooth_df.count().any()==0:
         spill_table = 'no spill or\nno data:\n' + '{d.month}/{d.day}'.format(d=then)  + '-' + '{d.month}/{d.day}'.format(d=now)
     elif np.all(np.isnan(lowess[:,1])):
         spill_table = '7day regression\nfailed'
     else: 
 #        smooth_df.count().any()>0:
+        spill_table = 'Most recent:\n{d.month}/{d.day}/{d.year} {d.hour:02}{d.minute:02}\n'.format(d=df1.index.max())
         spill_table += '\n7day regress.\nTDG    Spill\n(sat)   (kcfs)\n'
         for tdg_level in TDG_goals:
             aaa = smooth_df.iloc[(smooth_df[1]-tdg_level).abs().argsort()[:1]]
@@ -286,8 +291,10 @@ for project in projects:
             spill_table += str(tdg_level) + '%   ' + spill_txt + '\n'
     plt.text(1.02,0.5, spill_table, transform = ax.transAxes, verticalalignment='center')
 
-    
-
+    gridlines = ax.get_xgridlines() + ax.get_ygridlines()    
+    for line in gridlines:
+        line.set_linestyle(':')
+    plt.grid()
     #if 'LMN' in project:
     #    if 'bulk' in project:
     #        title1 += '(assumed <= '+ str(bulk_uni_threshold) + 'kcfs spill)'
@@ -295,7 +302,7 @@ for project in projects:
     #        title1 += '(assumed > '+ str(bulk_uni_threshold) + 'kcfs spill)'
     plt.xlabel(df1.keys()[0] + ' (kcfs)')
     plt.ylabel(df1.keys()[1])
-    plt.legend(bbox_to_anchor=(0.5, 1.2), ncol = 3, loc = 'upper center')
+    plt.legend(handles = legend_elements, bbox_to_anchor=(0.5, 1.2), ncol = 3, loc = 'upper center')
 #    if not df1.count().any():
     title1 += ' {d.month}/{d.day}/{d.year} {d.hour:02}{d.minute:02}'.format(d=now)
     plt.title(title1, y=1.2)
