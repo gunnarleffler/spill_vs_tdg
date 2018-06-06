@@ -270,7 +270,7 @@ for project in projects:
     ax.set_position([box.x0, box.y0, box.width * 0.9, box.height])
 
     
-    if smooth_df.count().any()==0:
+    if len(df1)==0:
         spill_table = 'no spill or\nno data:\n' + '{d.month}/{d.day}'.format(d=then)  + '-' + '{d.month}/{d.day}'.format(d=now)
     elif np.all(np.isnan(lowess[:,1])):
         spill_table = '7day regression\nfailed'
