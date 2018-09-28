@@ -26,10 +26,31 @@ import argparse
 import json
 import yaml
 import pandas as pd
-from cwms_read.cwms_read import get_cwms, reindex
+from cwms_read.cwms_read import get_cwms
 from datetime import timedelta, datetime
 import numpy as np
 import math
+from numpy import median
+
+def reindex(df, start_date, end_date, freq):
+    start = datetime(*start_date)
+    end = datetime(*end_date)
+    end = end.replace(hour = 23, minute = 0, second = 0)
+    date = pd.date_range(start, end, freq = freq)
+    date = [pd.Timestamp(x) for x in date]
+    if 'D' in freq:
+        index = df.index.copy()
+        index_hours = [x.hour for x in index]
+        m = median(index_hours)
+        def find_remainder(x):
+            return x%m
+        if sum([x%m for x in index_hours])>0:
+            return False
+        else:
+            date = [x.replace(hour = int(m)) for x in date] 
+    df = df.reindex(date)
+    df.index.rename('date', inplace = True)
+    return df
 
 def loadConfig(path, verbose = True):
   if verbose:
@@ -294,10 +315,11 @@ if __name__ == "__main__":
     path = '.%-Saturation-TDG.Inst.1Hour.0.'
     paths = []
     for key, value in config_dict.items():
-        path_end = value['path']
-        paths.append('{}{}{}'.format(key, path, path_end))
+        for path_end in value['path']:
+        
+            paths.append('{}{}{}'.format(key, path, path_end))
     
-    df = get_cwms(paths, lookback = lookback + 3, fill = True, public = True, timezone = 'PST')
+    df = get_cwms(paths, lookback = lookback + 3, fill = True, public = False, timezone = 'PST')
     meta = df.__dict__['metadata']
 
 
@@ -305,7 +327,7 @@ if __name__ == "__main__":
         series = df[column].copy()
         units = meta[series.name]['units']
         new_pathname = '.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-'
-        name = series.name.split('_')[0] 
+        name = series.name.split('.')[0]
         end_name = meta[series.name]['path'].split('-')[-1]
         oregon_pathname = '{}{}{}{}'.format(name, new_pathname, 'ORmethod-', end_name)
         washington_pathname = '{}{}{}{}'.format(name, new_pathname, 'WAmethod-', end_name)

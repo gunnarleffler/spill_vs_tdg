@@ -5,58 +5,29 @@ import json
 import pandas as pd
 from datetime import datetime, timedelta
 import sys
-from numpy import median
 
 
-def reindex(df, start_date, end_date, freq):
+def fill_index(df, start_date, end_date, freq):
     start = datetime(*start_date)
     end = datetime(*end_date)
     end = end.replace(hour = 23, minute = 0, second = 0)
     date = pd.date_range(start, end, freq = freq)
     date = [pd.Timestamp(x) for x in date]
-    if 'D' in freq:
-        index = df.index.copy()
-        index_hours = [x.hour for x in index]
-        m = median(index_hours)
-        def find_remainder(x):
-            return x%m
-        if sum([x%m for x in index_hours])>0:
-            return False
-        else:
-            date = [x.replace(hour = int(m)) for x in date] 
     df = df.reindex(date)
     df.index.rename('date', inplace = True)
     return df
 
-def get_frequency(index):
-    """
-    Args:
-        
-        index: a pd.core.indexes.datetimes.DatetimeIndex from a timeseries
-        
-    Returns:
-        
-        freq: a string value of either a daily, hourly, minutely, or secondly 
-              Offset Alias with the appropriate multiple.
-              This is not very robust, and returns False if it is not able to 
-              easily determine the frequency
-    """
-    seconds = index.to_series().diff().median().total_seconds()
-    minutes = seconds/60
-    hours = minutes/60
-    days = hours/24
-    if days>=1 and days%int(days) == 0:
-        freq = str(int(days))+'D'
-    elif hours>=1 and hours%int(hours) == 0:
-        freq = str(int(hours))+'H'
-    elif minutes>=1 and minutes%int(minutes) == 0:
-        freq = str(int(minutes))+'min'
-    elif seconds>=1 and seconds%int(seconds) == 0:
-        freq = str(int(seconds))+'S'
-    else: 
-        freq =  False
+
+def get_frequency(path: str)->str:
+    freq = path.split('.')[3]
+    if '~' in freq: return False
+    elif 'Hour' in freq:
+        freq = freq.split('Hour')[0] + 'H'
+    elif 'Day' in freq:
+        freq = freq.split('Day')[0] + 'D'
+    elif 'Min' in freq:
+        freq = freq.split('Min')[0] + 'min'
     return freq
-    
     
 def time_window_url(paths, public=True, lookback = 7, start_date = False, end_date = False, timezone = 'PST'):
     """
@@ -103,7 +74,7 @@ def time_window_url(paths, public=True, lookback = 7, start_date = False, end_da
 
     
 
-def get_cwms(paths, public = True, fill = True, set_day = True, **kwargs):
+def get_cwms(paths, col_names = None, public = True, fill = True, **kwargs):
     
     """
     A function to parse CWMS json data from webservice into a pandas dataframe
@@ -130,6 +101,10 @@ def get_cwms(paths, public = True, fill = True, set_day = True, **kwargs):
                         example: (2017, 3, 22)
         
         timezone    --  "PST", "PDT", "MST", "MDT", "GMT"
+        
+        col_names   -- Optional list for df column names
+        
+        set_day     -- Boolean, True sets day 
                         
                         
     Returns:
@@ -153,19 +128,25 @@ def get_cwms(paths, public = True, fill = True, set_day = True, **kwargs):
     try:timezone = kwargs['timezone']
     except: timezone = 'PST'
     url = time_window_url(paths,start_date=start_date, end_date=end_date, lookback = lookback, public=public,timezone = timezone)
-    r = requests.get(url)
+    if public:
+        r = requests.get(url)
+    else:
+        requests.packages.urllib3.disable_warnings() 
+        r = requests.get(url, verify = False)
     json_data = json.loads(r.text)
     df_list = []
     meta = {}
     if not isinstance(paths, list):
         paths = [paths]
+    if col_names:
+         col_dict = {path:name for path, name in zip(paths, col_names)}
     site_dict = {}
     for path in paths:
         site = path.split('.')[0]
         try: site_dict[site].append(path)
         except KeyError:
             site_dict.update({site:[path]})
-            
+    freq_list = []        
     for site,path_list in site_dict.items():
         try:
             data = json_data[site]
@@ -176,50 +157,56 @@ def get_cwms(paths, public = True, fill = True, set_day = True, **kwargs):
         long = data['coordinates']['longitude']
         tz_offset = data['tz_offset']
         tz = data['timezone']
+        
         for path in path_list:
+            
             vals = data['timeseries'][path.strip()]
-            column_name = '_'.join(path.split('.')[:2])
-            column_name = '_'.join(column_name.split('-'))
             try:path_data = vals['values']
             except KeyError: 
                 sys.stderr.write('!No data for %s\n' % path)
+                paths = [x for x in paths if x != path]
                 continue
             date = [val[0] for val in path_data]
             values = [val[1] for val in path_data]
             flags = [val[2] for val in path_data]
-            df= pd.DataFrame({'date': date, column_name: values})
+            df= pd.DataFrame({'date': date, path: values})
             df['date'] = pd.to_datetime(df['date'])
             flags = pd.DataFrame({'date': df['date'], 'flag': flags})
             flags = flags[flags['flag']>0].set_index('date')
             df.set_index('date', inplace = True)
-            freq = get_frequency(df.index)
-            if freq and 'D' in freq and set_day:
-                df.index = [x.replace(hour = 0, minute = 0, second = 0) for x in df.index]
-                df.index.name = 'date'
+            freq = get_frequency(path)
+            freq_list.append(freq)
+#            if freq and 'D' in freq and set_day:
+#                df.index = [x.replace(hour = 0, minute = 0, second = 0) for x in df.index]
+#                df.index.name = 'date'
+            if freq and fill:
+                start = df.dropna().index[0]
+                end = df.dropna().index[-1]
+                start_date = (start.year, start.month, start.day)
+                end_date = (end.year, end.month, end.day)
+                df = df.pipe(fill_index, start_date, end_date, freq)
+                
             df_list.append(df)
             vals.pop('values', None)
             vals.update({'path':path, 'lat':lat,'long':long, 
                          'tz_offset':tz_offset, 'timezone':tz, 'flags': flags})
-            meta.update({column_name:vals})
+            meta.update({path:vals})
     
     if not df_list: return False
     else: df = pd.concat(df_list, axis = 1)
-    
-    if fill:
+    if len(set(freq_list)) == 1:
         try:
-            freq = kwargs['freq']
-        except KeyError:
-            freq = get_frequency(df.index)
-        if not freq:
-            sys.stderr.write('Unable to determine frequency, returning data frame unfilled')
-        else:
-            if lookback:
-                end = datetime.now()
-                start = end - timedelta(days=lookback)
-                start_date = (start.year,start.month,start.day)
-                end_date = (end.year,end.month,end.day)
-            df = df.pipe(reindex, start_date, end_date, freq)
-    df.__dict__['metadata'] = meta
+            df = df.asfreq(freq_list[0])
+        except ValueError:
+            pass
+    df =df[paths]
+    if col_names:
+        df.rename(columns = col_dict, inplace = True)
+        new_meta = {}
+        for path in col_dict.keys():
+            new_meta.update({col_dict[path]:meta[path]})
+        meta = new_meta
+    df.__dict__['metadata'] = meta   
     return df
     
 
