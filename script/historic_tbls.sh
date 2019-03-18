@@ -9,7 +9,7 @@
 
 OFFICE=nwdp
 FN=wq_tools
-SCRIPT_NAME="wq_tools.sh"
+SCRIPT_NAME="historic_tbls.sh"
 
 SOURCE=/usr/dx
 
@@ -47,32 +47,8 @@ cd $SCRIPT_DIR
 
 find . -name "*.pyc" | xargs rm
 
-python3 Timeseries_spill_TDG_plus_py36_v1.py
-
-python3 Spill_v_TDG_daily_py36_v1.py
-
-############################################################
-# Calculate Washington, Oregon and Combined 12h TDG Averages
-############################################################
-
-cd $SCRIPT_DIR/12hr
-python3 ./get_avgs.py -l 60 config.yml -rj > ../../data/12hr.json
-
-############################################################
 #Create overview tables
 ############################################################
 cd $SCRIPT_DIR/12hr
-jupyter nbconvert --to html --execute ./columbia.ipynb
-jupyter nbconvert --to html --execute ./snake_river.ipynb
-
-###########################################################
-#create wq plot dashboard
-##########################################################
-cd $SCRIPT_DIR/wq_plots
-python3 ./main.py snake.yml -t Snake_River
-############################################################
-#Create cciw prediction table
-############################################################
-cd $SCRIPT_DIR/knn
-jupyter nbconvert --to html --execute ./daily_predict.ipynb
-
+jupyter nbconvert --ExecutePreprocessor.timeout=1500 --to html --execute ./columbia_historic.ipynb
+jupyter nbconvert --ExecutePreprocessor.timeout=1500 --to html --execute ./snake_river_historic.ipynb

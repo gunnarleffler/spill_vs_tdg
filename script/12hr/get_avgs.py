@@ -329,8 +329,8 @@ if __name__ == "__main__":
         new_pathname = '.%-Saturation-TDG.Ave.~1Day.12Hours.CENWDP-COMPUTED-'
         name = series.name.split('.')[0]
         end_name = meta[series.name]['path'].split('-')[-1]
-        oregon_pathname = '{}{}{}{}'.format(name, new_pathname, 'ORmethod-', end_name)
-        washington_pathname = '{}{}{}{}'.format(name, new_pathname, 'WAmethod-', end_name)
+        oregon_pathname = '{}{}{}{}'.format(name, new_pathname, 'Ave12hrMax-', end_name)
+        washington_pathname = '{}{}{}{}'.format(name, new_pathname, 'Max12hrMvAve-', end_name)
         combined_pathname = '{}{}{}{}'.format(name, new_pathname, 'Combined-', end_name)
         orgn = series.pipe(oregon_method)
         wa = series.pipe(washington_method)

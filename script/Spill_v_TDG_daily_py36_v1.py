@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from cwms_read.cwms_read import get_cwms
 import pandas as pd
 import matplotlib
-#matplotlib.use('Agg')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 import statsmodels.api as sm
@@ -27,7 +27,7 @@ indir = os.getcwd() + "/../config/"
 
 file_out_base = 'daily_spill_v_tdg_2'
 
-projects = ['BON', 'BON_WRNO','TDA', 'JDA', 'MCN', 'IHR', 'LMN', 'LGS', 'LWG', 'GCL', 'CHJ']
+projects = ['BON_WRNO','TDA', 'JDA', 'MCN', 'IHR', 'LMN', 'LGS', 'LWG', 'GCL', 'CHJ']
 
 now = datetime.now()
 then = now - timedelta(7)
