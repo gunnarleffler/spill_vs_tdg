@@ -79,7 +79,7 @@ forecast_days = 11
 now = datetime.now() + timedelta(1)
 end = now.strftime("%m/%d/%Y")
 past = now - timedelta(lag_days)
-past = datetime(2018, 4, 1)
+past = datetime(2019,3, 14)
 start = past.strftime("%m/%d/%Y")
 end2 = (now + timedelta(forecast_days)).strftime("%m/%d/%Y")
 now2 = datetime.now() + timedelta(-1)
@@ -261,7 +261,7 @@ SiteInfo['BON'] = {'Qtotal':{'file':'BON.Flow-Out.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qspill':{'file':'BON.Flow-Spill.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qpower':{'file':'BON.Flow-Gen.Ave.1Hour.1Hour.CBT-REV'},\
                      'Qspill_cap':{'file':'BON.Flow-Spill-Cap-Fish.Inst.~1Day.0.CENWDP-COMPUTED-PUB'},\
-#                     'TDG_in1':{'file':'WRNO.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
+                     'TDG_in1':{'file':'WRNO.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_us_FB':{'file':'BON.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
                      'TDG_ds_TW':{'file':'CCIW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
 #                     'TDG_ds_FB':{'file':'CWMW.%-Saturation-TDG.Inst.1Hour.0.GOES-COMPUTED-REV'},\
