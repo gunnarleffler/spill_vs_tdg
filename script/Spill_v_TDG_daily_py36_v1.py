@@ -27,8 +27,9 @@ indir = os.getcwd() + "/../config/"
 
 file_out_base = 'daily_spill_v_tdg_2'
 
-projects = ['BON_WRNO','TDA', 'JDA', 'MCN', 'IHR', 'LMN', 'LGS', 'LWG', 'GCL', 'CHJ']
+#projects = ['BON_WRNO','TDA', 'JDA', 'MCN', 'IHR', 'LMN', 'LGS', 'LWG', 'GCL', 'CHJ']
 
+projects = ['BON','TDA', 'JDA', 'MCN', 'IHR', 'LMN', 'LGS', 'LWG', 'GCL', 'CHJ']
 now = datetime.now()
 then = now - timedelta(7)
 
